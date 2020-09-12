@@ -3,18 +3,21 @@
     <img alt="Vue logo" src="./assets/logo.png">
     <Login/>
     <Feed/>
+    <upload></upload>
   </div>
 </template>
 
 <script>
 import Login from './components/Login.vue'
 import Feed from './components/Feed.vue'
+import Upload from './components/Upload.vue'
 
 export default {
   name: 'App',
   components: {
     Login,
-    Feed
+    Feed,
+    Upload
   }
 }
 </script>
