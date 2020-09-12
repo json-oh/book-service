@@ -2,16 +2,19 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <Login/>
+    <upload></upload>
   </div>
 </template>
 
 <script>
 import Login from './components/Login.vue'
+import Upload from './components/Upload.vue'
 
 export default {
   name: 'App',
   components: {
-    Login
+    Login,
+    Upload
   }
 }
 </script>
