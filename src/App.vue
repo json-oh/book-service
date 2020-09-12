@@ -2,16 +2,19 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <Login/>
+    <Feed/>
   </div>
 </template>
 
 <script>
 import Login from './components/Login.vue'
+import Feed from './components/Feed.vue'
 
 export default {
   name: 'App',
   components: {
-    Login
+    Login,
+    Feed
   }
 }
 </script>
