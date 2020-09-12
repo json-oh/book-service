@@ -13,6 +13,9 @@
       <p>업로드가 완료되었습니다.</p>
       <img alt="업로드된 이미지" :src="uploadedImageUrl">
     </div>
+    <div v-if="searchValue">
+      <input type="search" :value="searchValue" />
+    </div>
     <div v-if="error">
       <p>업로드에 실패했습니다.<br/>{{ error }}</p>
     </div>
@@ -21,6 +24,7 @@
 
 <script>
 import { Storage } from 'aws-amplify'; 
+import Predictions from '@aws-amplify/predictions';
 
 export default {
   name: "upload",
@@ -29,7 +33,8 @@ export default {
       image: null,
       progress: null,
       uploadedImageUrl: '',
-      error: ''
+      error: '',
+      searchValue: ''
     };
   },
   methods: {
@@ -59,6 +64,7 @@ export default {
         })
 
         this.updateImageUrl(key)
+        this.identifyText(key)
       } catch (e) {
         if (e.message.includes('403')) {
           this.error = '인증 정보가 올바르지 않습니다.'
@@ -72,6 +78,23 @@ export default {
         this.uploadedImageUrl = await Storage.get(imageKey, {
           level: 'protected'
         })
+      } catch (e) {
+        // TODO: 에러 처리
+        console.error(e)
+      }
+    },
+    async identifyText(imageKey) {
+      try {
+        const result = await Predictions.identify({
+          text: {
+            source: {
+              key: imageKey,
+              level: 'protected'
+            }
+          }
+        })
+        this.searchValue = result.text.fullText;
+        console.log(result)
       } catch (e) {
         // TODO: 에러 처리
         console.error(e)
