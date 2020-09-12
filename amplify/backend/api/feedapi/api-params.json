@@ -1,0 +1,35 @@
+{
+    "paths": [
+        {
+            "name": "/feed/{id}",
+            "lambdaFunction": "feedfunction",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/feed/*"
+        }
+    ],
+    "resourceName": "feedapi",
+    "apiName": "feedapi",
+    "functionArns": [
+        {
+            "lambdaFunction": "feedfunction"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-bookservice-dev-164010-authRole",
+        "unAuthRoleName": "amplify-bookservice-dev-164010-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "feedfunction",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,5 @@
+{
+    "tableName": "feeds",
+    "partitionKeyName": "id",
+    "partitionKeyType": "S"
+}
