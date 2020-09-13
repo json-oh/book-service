@@ -25,15 +25,13 @@
 </template>
 
 <script>
-import { API, Auth, Storage } from "aws-amplify";
-import { onAuthUIStateChange } from "@aws-amplify/ui-components";
+import { API, Auth } from "aws-amplify";
+import { mapState } from "vuex";
 
 export default {
   name: "FeedList",
   data() {
     return {
-      user: undefined,
-      authState: undefined,
       feeds: [],
     };
   },
@@ -74,22 +72,13 @@ export default {
     },
   },
   computed: {
+    ...mapState(["user", "authState"]),
     isLoggedIn() {
       return this.authState === "signedin";
     },
   },
   created() {
-    onAuthUIStateChange((authState, authData) => {
-      this.init();
-      this.authState = authState;
-      this.user = authData;
-      if (this.user) this.getMyFeeds();
-    });
-    console.log("asdf");
-    console.log(this.getIdentityId());
-  },
-  beforeDestroy() {
-    return onAuthUIStateChange;
+    this.getMyFeeds();
   },
 };
 </script>
