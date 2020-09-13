@@ -5,14 +5,10 @@
       username-alias="email"
       :form-fields.prop="formFields"
     ></amplify-sign-up>
-    <amplify-sign-in
-      slot="sign-in"
-      username-alias="email"
-      :form-fields.prop="formFields"
-    ></amplify-sign-in>
-    <amplify-sign-out></amplify-sign-out>
+    <amplify-sign-in slot="sign-in" username-alias="email"></amplify-sign-in>
   </amplify-authenticator>
 </template>
+
 <script>
 export default {
   name: "login",
