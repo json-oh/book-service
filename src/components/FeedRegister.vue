@@ -1,5 +1,5 @@
 <template>
-  <div id="feed" v-if="isLoggedIn">
+  <div id="feedRegister" v-if="isLoggedIn">
     <h1>피드 등록</h1>
     <form @submit.prevent="upload" id="uploadForm">
       <label for="image">업로드할 사진을 선택해 주세요.</label>
@@ -60,6 +60,7 @@
 import { API, Auth, Storage } from "aws-amplify";
 import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 import Predictions from "@aws-amplify/predictions";
+import { mapState } from "vuex";
 
 export default {
   name: "FeedRegister",
@@ -71,14 +72,14 @@ export default {
       uploadedImageUrl: "",
       error: "",
       searchValue: "",
-      user: undefined,
-      authState: undefined,
+      identityId: undefined,
       title: "",
       author: "",
       comment: "",
     };
   },
   computed: {
+    ...mapState(["user", "authState"]),
     isLoggedIn() {
       return this.authState === "signedin";
     },
@@ -121,10 +122,12 @@ export default {
       }
     },
     async updateImageUrl(imageKey) {
+      const creds = await Auth.currentCredentials();
+      this.identityId = creds.identityId;
       try {
         this.uploadedImageUrl = await Storage.get(imageKey, {
           level: "protected",
-          identityId: this.getIdentityId(),
+          identityId: this.identityId,
         });
       } catch (e) {
         // TODO: 에러 처리
@@ -142,7 +145,6 @@ export default {
           },
         });
         this.searchValue = result.text.fullText;
-        console.log(result);
       } catch (e) {
         // TODO: 에러 처리
         console.error(e);
@@ -150,7 +152,7 @@ export default {
     },
     async createFeed() {
       const { title, author, comment, imageKey } = this;
-      const identityId = this.getIdentityId();
+      const identityId = this.identityId;
       const feed = { title, author, comment, imageKey, identityId };
       console.log(feed);
       const myInit = {
@@ -165,9 +167,8 @@ export default {
       console.log({ apiData });
       location.reload();
     },
-    getIdentityId() {
-      let creds = Auth.currentCredentials();
-      console.log(creds);
+    async getIdentityId() {
+      let creds = await Auth.currentCredentials();
       return creds.identityId;
     },
   },
@@ -177,7 +178,6 @@ export default {
       this.authState = authState;
       this.user = authData;
     });
-    console.log(this.getIdentityId());
   },
   beforeDestroy() {
     return onAuthUIStateChange;
