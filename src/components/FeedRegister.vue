@@ -20,9 +20,17 @@
       <p>업로드가 완료되었습니다.</p>
       <img alt="업로드된 이미지" :src="uploadedImageUrl" />
     </div>
-    <div v-if="searchValue">
-      <input type="search" :value="searchValue" />
-    </div>
+    <form v-if="searchValue !== null" @submit.prevent="searchBooks">
+      <input type="search" v-model.trim="searchValue" />
+      <button type="submit">검색</button>
+    </form>
+    <ol v-if="Array.isArray(searchResult)">
+      <li v-for="book in searchResult" :key="book.id">
+        <a href="javascript:void(0);" @click="select(book)"
+          >{{ book.title }} - {{ book.authors }}</a
+        >
+      </li>
+    </ol>
     <div v-if="error">
       <p>업로드에 실패했습니다.<br />{{ error }}</p>
     </div>
@@ -34,6 +42,7 @@
         type="text"
         v-model="title"
         placeholder="Title"
+        disabled="disabled"
       />
       <label for="author">저자</label>
       <input
@@ -42,6 +51,7 @@
         type="text"
         v-model="author"
         placeholder="Author"
+        disabled="disabled"
       />
       <label for="comment">한줄평</label>
       <input
@@ -71,10 +81,12 @@ export default {
       imageKey: "",
       uploadedImageUrl: "",
       error: "",
-      searchValue: "",
-      identityId: undefined,
+      searchValue: null,
+      searchResult: null,
+      identityId: null,
       title: "",
       author: "",
+      book: null,
       comment: "",
     };
   },
@@ -145,15 +157,36 @@ export default {
           },
         });
         this.searchValue = result.text.fullText;
+        this.searchBooks();
       } catch (e) {
         // TODO: 에러 처리
         console.error(e);
       }
     },
+    async searchBooks() {
+      try {
+        const result = await API.get(
+          "book_info_api",
+          `/books/${encodeURIComponent(this.searchValue)}`
+        );
+        this.searchResult = result.data.map((doc) => ({
+          id: doc._id,
+          ...doc._source,
+        }));
+      } catch (e) {
+        // TODO: 에러 처리
+        console.error(e);
+      }
+    },
+    select(book) {
+      this.book = book;
+      this.title = book.title;
+      this.author = book.authors;
+    },
     async createFeed() {
-      const { title, author, comment, imageKey } = this;
+      const { book, comment, imageKey } = this;
       const identityId = this.identityId;
-      const feed = { title, author, comment, imageKey, identityId };
+      const feed = { book, comment, imageKey, identityId };
       console.log(feed);
       const myInit = {
         headers: {
@@ -166,10 +199,6 @@ export default {
       const apiData = await API.post("feedapi", "/feed", myInit);
       console.log({ apiData });
       location.reload();
-    },
-    async getIdentityId() {
-      let creds = await Auth.currentCredentials();
-      return creds.identityId;
     },
   },
   created() {

@@ -5,17 +5,17 @@
       <thead>
         <tr>
           <th>작성자</th>
-          <th>title</th>
-          <th>author</th>
-          <th>contents</th>
-          <th>image</th>
+          <th>제목</th>
+          <th>작가</th>
+          <th>한줄평</th>
+          <th>이미지</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(feed, index) in feeds" :key="index">
           <td>{{ feed.userId }}</td>
-          <td>{{ feed.title }}</td>
-          <td>{{ feed.author }}</td>
+          <td>{{ feed.book.title }}</td>
+          <td>{{ feed.book.authors }}</td>
           <td>{{ feed.comment }}</td>
           <td>
             <img :src="feed.imageUrl" width="150px" :alt="feed.imageKey" />
