@@ -2,21 +2,24 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <Login/>
-    <Feed/>
+    <FeedList/>
+    <FeedRegister/>
     <upload></upload>
   </div>
 </template>
 
 <script>
 import Login from './components/Login.vue'
-import Feed from './components/Feed.vue'
+import FeedRegister from './components/FeedRegister.vue'
+import FeedList from './components/FeedList.vue'
 import Upload from './components/Upload.vue'
 
 export default {
   name: 'App',
   components: {
     Login,
-    Feed,
+    FeedList,
+    FeedRegister,
     Upload
   }
 }

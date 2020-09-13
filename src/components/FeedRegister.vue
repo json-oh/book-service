@@ -1,26 +1,6 @@
 <template>
-    <div id="feed">
-        <h1>myFeeds</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>title</th>
-                    <th>author</th>
-                    <th>contents</th>
-                    <th>image</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="feed in feeds" v-bind:key="feed" >
-                    <td>{{feed.bookTitle}}</td>
-                    <td>{{feed.bookAuthor}}</td>
-                    <td>{{feed.contents}}</td>
-                    <td>{{feed.imageUrl}}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <h1>Feed</h1>
+    <div id="feed" v-if="isLoggedIn">
+        <h1>Feed Register</h1>
         <input type="text" v-model="bookTitle" placeholder="Book Title">
         <input type="text" v-model="bookAuthor" placeholder="Book Author">
         <input type="text" v-model="contents" placeholder="contents">
@@ -31,16 +11,23 @@
 
 <script>
     import { API, Auth } from 'aws-amplify';
+    import { onAuthUIStateChange } from '@aws-amplify/ui-components'
 
     export default {
-        name: 'Feed',
+        name: 'FeedRegister',
         data() {
             return {
+                user: undefined,
+                authState: undefined,
                 bookTitle: '',
                 bookAuthor: '',
                 contents: '',
                 imageUrl: '',
-                feeds: []
+            }
+        },
+        computed: {
+            isLoggedIn(){
+                return this.authState === 'signedin'
             }
         },
         methods: {
@@ -56,19 +43,17 @@
                 };
                 const apiData = await API.post('feedapi', '/feed', myInit);
                 console.log({apiData})
-            },
-            async getMyFeeds() {
-                const myInit = {
-                    headers: {
-                        Authorization: (await Auth.currentSession()).getIdToken().getJwtToken(),
-                    }
-                };
-                const feedData = await API.get('feedapi', '/feed', myInit);
-                this.feeds = feedData
             }
         },
         created() {
-            this.getMyFeeds()
+            onAuthUIStateChange((authState, authData) => {
+                console.log(authData);
+                this.authState = authState;
+                this.user = authData;
+            });
+        },
+        beforeDestroy() {
+            return onAuthUIStateChange;
         }
     };
 </script>
