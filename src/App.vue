@@ -2,9 +2,9 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" />
     <Login />
-    <FeedList />
     <FeedRegister />
-    <upload></upload>
+    <FeedList />
+    <!--    <upload></upload>-->
   </div>
 </template>
 
@@ -12,15 +12,15 @@
 import Login from "./components/Login.vue";
 import FeedRegister from "./components/FeedRegister.vue";
 import FeedList from "./components/FeedList.vue";
-import Upload from "./components/Upload.vue";
+// import Upload from "./components/Upload.vue";
 
 export default {
   name: "App",
   components: {
     Login,
-    FeedList,
     FeedRegister,
-    Upload,
+    FeedList,
+    // Upload,
   },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div id="feedList" v-if="isLoggedIn">
-    <h1>{{ user.attributes.email }}'s Feed List</h1>
+    <h1>{{ user.attributes.email }}의 피드 목록</h1>
     <table>
       <thead>
         <tr>
@@ -12,10 +12,12 @@
       </thead>
       <tbody>
         <tr v-for="(feed, index) in feeds" :key="index">
-          <td>{{ feed.bookTitle }}</td>
-          <td>{{ feed.bookAuthor }}</td>
-          <td>{{ feed.contents }}</td>
-          <td><img :src="feed.imageUrl" width="150px" /></td>
+          <td>{{ feed.title }}</td>
+          <td>{{ feed.author }}</td>
+          <td>{{ feed.comment }}</td>
+          <td>
+            <img :src="feed.imageUrl" width="150px" :alt="feed.imageKey" />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -23,7 +25,7 @@
 </template>
 
 <script>
-import { API, Auth } from "aws-amplify";
+import { API, Auth, Storage } from "aws-amplify";
 import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 
 export default {
@@ -36,6 +38,9 @@ export default {
     };
   },
   methods: {
+    init() {
+      this.feeds = [];
+    },
     async getMyFeeds() {
       const myInit = {
         headers: {
@@ -46,6 +51,26 @@ export default {
       };
       const feedData = await API.get("feedapi", "/feed", myInit);
       this.feeds = feedData;
+      this.getImageUrl();
+    },
+    async getImageUrl() {
+      try {
+        for (let i = 0; i < this.feeds.length; i++) {
+          let feed = this.feeds[i];
+          feed.imageUrl = await Storage.get(feed.imageKey, {
+            level: "protected",
+            identityId: this.getIdentityId(),
+          });
+          this.feeds.splice(i, 1, feed);
+        }
+      } catch (e) {
+        // TODO: 에러 처리
+        console.error(e);
+      }
+    },
+    getIdentityId() {
+      let creds = Auth.currentCredentials();
+      return creds.identityId;
     },
   },
   computed: {
@@ -55,10 +80,13 @@ export default {
   },
   created() {
     onAuthUIStateChange((authState, authData) => {
+      this.init();
       this.authState = authState;
       this.user = authData;
+      if (this.user) this.getMyFeeds();
     });
-    this.getMyFeeds();
+    console.log("asdf");
+    console.log(this.getIdentityId());
   },
   beforeDestroy() {
     return onAuthUIStateChange;
