@@ -68,7 +68,6 @@
 
 <script>
 import { API, Auth, Storage } from "aws-amplify";
-import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 import Predictions from "@aws-amplify/predictions";
 import { mapState } from "vuex";
 
@@ -200,16 +199,6 @@ export default {
       console.log({ apiData });
       location.reload();
     },
-  },
-  created() {
-    onAuthUIStateChange((authState, authData) => {
-      console.log(authData);
-      this.authState = authState;
-      this.user = authData;
-    });
-  },
-  beforeDestroy() {
-    return onAuthUIStateChange;
   },
 };
 </script>

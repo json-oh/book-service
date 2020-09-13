@@ -19,6 +19,15 @@ Amplify.configure({
         "x-api-key": "8QGnKAjMjG5TcPGQ7T2cw4A0O7EeBp3q4jtDc9Ww",
       }),
     },
+    {
+      name: "recommendation-api",
+      endpoint:
+        "https://cf4z83d6th.execute-api.us-east-1.amazonaws.com/test-rec",
+      region: "us-east-1",
+      custom_header: () => ({
+        "Content-Type": "application/json",
+      }),
+    },
   ],
 });
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
