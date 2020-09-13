@@ -25,13 +25,14 @@
 </template>
 
 <script>
-import { API, Auth } from "aws-amplify";
+import { API, Auth, Storage } from "aws-amplify";
 import { mapState } from "vuex";
 
 export default {
   name: "FeedList",
   data() {
     return {
+      identityId: undefined,
       feeds: [],
     };
   },
@@ -40,6 +41,8 @@ export default {
       this.feeds = [];
     },
     async getMyFeeds() {
+      const creds = await Auth.currentCredentials();
+      this.identityId = creds.identityId;
       const myInit = {
         headers: {
           Authorization: (await Auth.currentSession())
@@ -57,7 +60,7 @@ export default {
           let feed = this.feeds[i];
           feed.imageUrl = await Storage.get(feed.imageKey, {
             level: "protected",
-            identityId: this.getIdentityId(),
+            identityId: this.identityId,
           });
           this.feeds.splice(i, 1, feed);
         }
@@ -65,10 +68,6 @@ export default {
         // TODO: 에러 처리
         console.error(e);
       }
-    },
-    getIdentityId() {
-      let creds = Auth.currentCredentials();
-      return creds.identityId;
     },
   },
   computed: {
