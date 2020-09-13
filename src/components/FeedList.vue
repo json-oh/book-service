@@ -24,14 +24,12 @@
 
 <script>
 import { API, Auth } from "aws-amplify";
-import { onAuthUIStateChange } from "@aws-amplify/ui-components";
+import { mapState } from "vuex";
 
 export default {
   name: "FeedList",
   data() {
     return {
-      user: undefined,
-      authState: undefined,
       feeds: [],
     };
   },
@@ -49,19 +47,13 @@ export default {
     },
   },
   computed: {
+    ...mapState(["user", "authState"]),
     isLoggedIn() {
       return this.authState === "signedin";
     },
   },
   created() {
-    onAuthUIStateChange((authState, authData) => {
-      this.authState = authState;
-      this.user = authData;
-    });
     this.getMyFeeds();
-  },
-  beforeDestroy() {
-    return onAuthUIStateChange;
   },
 };
 </script>

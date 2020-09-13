@@ -5,6 +5,7 @@ import "@aws-amplify/ui-vue";
 import { AmazonAIPredictionsProvider } from "@aws-amplify/predictions";
 import aws_exports from "./aws-exports";
 import router from './router'
+import store from './store'
 
 Amplify.configure(aws_exports);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -13,5 +14,6 @@ Vue.config.productionTip = false;
 
 new Vue({
   router,
+  store,
   render: (h) => h(App)
 }).$mount("#app");

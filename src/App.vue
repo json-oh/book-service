@@ -17,6 +17,7 @@
 <script>
 import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 import Login from "./components/Login.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "App",
@@ -24,17 +25,11 @@ export default {
     Login,
   },
   created() {
-    onAuthUIStateChange((authState, authData) => {
-      this.authState = authState;
-      this.user = authData;
+    onAuthUIStateChange((authState, user) => {
+      this.$store.commit("SET_USER", { authState, user });
     });
   },
-  data() {
-    return {
-      user: null,
-      authState: null,
-    };
-  },
+  computed: mapState(["authState", "user"]),
   beforeDestroy() {
     return onAuthUIStateChange;
   },
