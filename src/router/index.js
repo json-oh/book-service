@@ -1,14 +1,19 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Feed from "../views/Feed.vue";
+import All from "../views/All.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
+    name: "All",
+    component: All,
+  },
+  {
+    path: "/feed",
     name: "Feed",
-    component: Feed,
+    component: () => import("../views/Feed.vue"),
   },
   {
     path: "/create",

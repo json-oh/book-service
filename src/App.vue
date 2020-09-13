@@ -6,7 +6,8 @@
     <template v-if="authState === 'signedin' && user">
       <amplify-sign-out></amplify-sign-out>
       <div id="nav">
-        <router-link to="/">My Feeds</router-link> |
+        <router-link to="/">All Feeds</router-link> |
+        <router-link to="/feed">My Feeds</router-link> |
         <router-link to="/create">Create Feed</router-link> |
         <router-link to="/upload">Upload</router-link> |
         <router-link to="/recommendation">Recommendation</router-link>
