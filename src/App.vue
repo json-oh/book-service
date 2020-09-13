@@ -10,7 +10,7 @@
         <router-link to="/feed">내 피드</router-link> |
         <router-link to="/create">피드 작성</router-link> |
         <!--        <router-link to="/upload">Upload</router-link> |-->
-        <router-link to="/recommendation">추천</router-link>
+        <!--        <router-link to="/recommendation">추천</router-link>-->
       </div>
       <router-view />
     </template>

@@ -1,24 +1,33 @@
 <template>
   <div id="recommend">
-    <h1>추천 목록</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>제목</th>
-          <th>작가</th>
-          <th>이미지</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(book, index) in books" :key="index">
-          <td>{{ book.title }}</td>
-          <td>{{ book.authors }}</td>
-          <td>
-            <img :src="book.thumbnail_link" width="150px" :alt="book.title" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <h2>추천 목록</h2>
+    <vs-card-group>
+      <vs-card v-for="(book, index) in books" :key="index">
+        <template #title>
+          <h3>{{ book.title }}</h3>
+        </template>
+        <template #img>
+          <img
+            :src="book.thumbnail_link"
+            alt="book.title"
+            height="250px"
+            style="width: auto"
+          />
+        </template>
+        <template #text>
+          <p>{{ book.authors }}</p>
+        </template>
+        <template #interactions>
+          <vs-button danger icon>
+            <i class="bx bx-heart"></i>
+          </vs-button>
+          <vs-button class="btn-chat" shadow primary>
+            <i class="bx bx-chat"></i>
+            <span class="span"> 54 </span>
+          </vs-button>
+        </template>
+      </vs-card>
+    </vs-card-group>
   </div>
 </template>
 

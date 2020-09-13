@@ -1,26 +1,33 @@
 <template>
   <div id="feedList" v-if="isLoggedIn">
-    <h1>{{ user.attributes.email }}의 피드 목록</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>제목</th>
-          <th>작가</th>
-          <th>한줄평</th>
-          <th>이미지</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(feed, index) in feeds" :key="index">
-          <td>{{ feed.book.title }}</td>
-          <td>{{ feed.book.authors }}</td>
-          <td>{{ feed.comment }}</td>
-          <td>
-            <img :src="feed.imageUrl" width="150px" :alt="feed.imageKey" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <h2>내 피드 목록</h2>
+    <vs-card-group>
+      <vs-card v-for="(feed, index) in feeds" :key="index">
+        <template #title>
+          <h3>{{ feed.book.title }}</h3>
+        </template>
+        <template #img>
+          <img
+            :src="feed.imageUrl"
+            alt="feed.imageKey"
+            height="250px"
+            style="width: auto"
+          />
+        </template>
+        <template #text>
+          <p>{{ feed.comment }}</p>
+        </template>
+        <template #interactions>
+          <vs-button danger icon>
+            <i class="bx bx-heart"></i>
+          </vs-button>
+          <vs-button class="btn-chat" shadow primary>
+            <i class="bx bx-chat"></i>
+            <span class="span"> 54 </span>
+          </vs-button>
+        </template>
+      </vs-card>
+    </vs-card-group>
   </div>
 </template>
 
