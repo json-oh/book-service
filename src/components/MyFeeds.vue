@@ -29,7 +29,7 @@ import { API, Auth, Storage } from "aws-amplify";
 import { mapState } from "vuex";
 
 export default {
-  name: "FeedList",
+  name: "MyFeeds",
   data() {
     return {
       identityId: undefined,

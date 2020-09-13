@@ -1,14 +1,14 @@
 <template>
-  <feed-list></feed-list>
+  <my-feeds></my-feeds>
 </template>
 
 <script>
-import FeedList from "../components/FeedList.vue";
+import MyFeeds from "../components/MyFeeds.vue";
 
 export default {
   name: "Feed",
   components: {
-    FeedList,
+    MyFeeds,
   },
 };
 </script>
