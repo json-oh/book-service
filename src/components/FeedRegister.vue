@@ -1,71 +1,142 @@
 <template>
-  <div id="feedRegister" v-if="isLoggedIn">
-    <h1>피드 등록</h1>
-    <form @submit.prevent="upload" id="uploadForm">
-      <label for="image">업로드할 사진을 선택해 주세요.</label>
-      <br />
-      <input
-        type="file"
-        id="image"
-        name="image"
-        accept="image/png, image/jpeg"
-        @change="onFileChange"
-      />
-      <button type="submit" :disabled="!this.image">업로드</button>
-    </form>
-    <div v-if="progress !== null && !uploadedImageUrl">
-      <progress :value="progress"></progress>
+  <div id="feedRegister" v-if="isLoggedIn" class="page">
+    <div class="card">
+      <div class="content">
+        <progress :value="progress" style="width: 300px"></progress>
+
+        <div v-if="step.fileSelecting">
+          <h3>책 표지를 업로드해주세요.</h3>
+          <form @submit.prevent="upload">
+            <div class="center content-inputs">
+              <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/png, image/jpeg"
+                @change="onFileChange"
+              />
+              <vs-button
+                flat
+                type="submit"
+                :disabled="!this.image"
+                style="display: inline-block"
+                >업로드</vs-button
+              >
+            </div>
+          </form>
+        </div>
+
+        <div v-if="step.fileUploading">
+          <h3>책 표지를 업로드하는 중입니다.</h3>
+        </div>
+
+        <div v-if="step.fileUploaded">
+          <div v-if="uploadedImageUrl">
+            <h3>업로드가 완료되었습니다.</h3>
+            <img width="250px" alt="업로드된 이미지" :src="uploadedImageUrl" />
+          </div>
+        </div>
+
+        <div v-if="step.textIdentifying">
+          <h3>책 표지에서 정보를 찾고 있어요.</h3>
+        </div>
+
+        <div v-if="step.textIdentified">
+          <h3>아래의 제목 또는 저자를 찾았어요!</h3>
+          <form v-if="searchValue !== null" @submit.prevent="searchBooks">
+            <vs-input type="search" v-model.trim="searchValue" />
+            <vs-button flat type="submit" style="display: inline-block"
+              >다시 검색</vs-button
+            >
+          </form>
+        </div>
+
+        <div v-if="step.bookSearching">
+          <h3>일치하는 책을 찾고 있어요.</h3>
+        </div>
+
+        <div v-if="step.bookSearched">
+          <h3>일치하는 책을 선택해주세요!</h3>
+          <div v-if="searchResult">
+            <span v-for="book in searchResult" :key="book.id">
+              <vs-radio v-model="selectedBook" :val="book.id">
+                {{ book.title }} - {{ book.authors }}
+              </vs-radio>
+            </span>
+          </div>
+        </div>
+
+        <div v-if="step.bookSearched">
+          <h3>피드를 작성해주세요!</h3>
+          <form @submit.prevent="createFeed" id="feedForm">
+            <vs-row justify="space-around" direction="column" class="mh">
+              <vs-col>
+                <vs-input
+                  id="title"
+                  name="title"
+                  label="제목"
+                  type="text"
+                  v-model="title"
+                  placeholder="Title"
+                  disabled="disabled"
+                />
+              </vs-col>
+            </vs-row>
+            <br />
+            <vs-row justify="space-around" direction="column" class="mh">
+              <vs-col>
+                <vs-input
+                  id="author"
+                  name="author"
+                  label="저자"
+                  type="text"
+                  v-model="author"
+                  placeholder="Author"
+                  disabled="disabled"
+                />
+              </vs-col>
+            </vs-row>
+            <br />
+            <vs-row justify="space-around" direction="column" class="mh">
+              <vs-col>
+                <vs-input
+                  id="comment"
+                  label="한줄평"
+                  name="comment"
+                  type="text"
+                  v-model="comment"
+                  placeholder="Comment"
+                />
+              </vs-col>
+            </vs-row>
+            <vs-button flat type="submit" style="display: inline-block"
+              >피드 등록</vs-button
+            >
+          </form>
+        </div>
+      </div>
     </div>
-    <div v-if="uploadedImageUrl">
-      <p>업로드가 완료되었습니다.</p>
-      <img alt="업로드된 이미지" :src="uploadedImageUrl" />
-    </div>
-    <form v-if="searchValue !== null" @submit.prevent="searchBooks">
-      <input type="search" v-model.trim="searchValue" />
-      <button type="submit">검색</button>
-    </form>
-    <ol v-if="Array.isArray(searchResult)">
-      <li v-for="book in searchResult" :key="book.id">
-        <a href="javascript:void(0);" @click="select(book)"
-          >{{ book.title }} - {{ book.authors }}</a
-        >
-      </li>
-    </ol>
+
     <div v-if="error">
       <p>업로드에 실패했습니다.<br />{{ error }}</p>
     </div>
-    <form @submit.prevent="createFeed" id="feedForm" v-if="searchValue">
-      <label for="title">제목</label>
-      <input
-        id="title"
-        name="title"
-        type="text"
-        v-model="title"
-        placeholder="Title"
-        disabled="disabled"
-      />
-      <label for="author">저자</label>
-      <input
-        id="author"
-        name="author"
-        type="text"
-        v-model="author"
-        placeholder="Author"
-        disabled="disabled"
-      />
-      <label for="comment">한줄평</label>
-      <input
-        id="comment"
-        name="comment"
-        type="text"
-        v-model="comment"
-        placeholder="Comment"
-      />
-      <button type="submit">피드 등록</button>
-    </form>
   </div>
 </template>
-
+<style>
+.vs-input {
+  width: 100%;
+}
+.card .content {
+  padding: 50px;
+  border-radius: 20px 20px 20px 20px;
+  border-bottom: 0 solid rgba(0, 0, 0, 0.03);
+  background: var(--vs-theme-layout);
+  height: auto;
+}
+.vs-radio-content {
+  justify-content: start;
+}
+</style>
 <script>
 import { API, Auth, Storage } from "aws-amplify";
 import Predictions from "@aws-amplify/predictions";
@@ -75,14 +146,26 @@ export default {
   name: "FeedRegister",
   data() {
     return {
+      step: {
+        fileSelecting: true,
+        fileSelected: false,
+        fileUploading: false,
+        fileUploaded: false,
+        textIdentifying: false,
+        textIdentified: false,
+        bookSearching: false,
+        bookSearched: false,
+        feedCreating: false,
+        feedCreated: false,
+      },
       image: null,
-      progress: null,
       imageKey: "",
       uploadedImageUrl: "",
       error: "",
       searchValue: null,
       searchResult: null,
       identityId: null,
+      selectedBook: null,
       title: "",
       author: "",
       book: null,
@@ -94,13 +177,29 @@ export default {
     isLoggedIn() {
       return this.authState === "signedin";
     },
+    progress() {
+      return (
+        (1 +
+          this.step.fileSelected +
+          this.step.fileUploaded +
+          this.step.textIdentified +
+          this.step.bookSearched +
+          this.step.feedCreated) /
+        6
+      );
+    },
+  },
+  watch: {
+    selectedBook: function (val) {
+      this.select(this.searchResult[val]);
+    },
   },
   methods: {
     onFileChange(event) {
       this.image = event.target.files[0];
     },
     resetResult() {
-      this.progress = 0;
+      // this.progress = 0;
       this.uploadedImageUrl = "";
       this.error = "";
     },
@@ -108,7 +207,9 @@ export default {
       if (!this.image) {
         return;
       }
-
+      this.step.fileSelecting = false;
+      this.step.fileSelected = true;
+      this.step.fileUploading = true;
       this.resetResult();
 
       try {
@@ -116,10 +217,13 @@ export default {
         const { key } = await Storage.put(this.image.name, this.image, {
           level: "protected",
           contentType: this.image.type,
-          progressCallback: (progress) => {
-            this.progress = progress.loaded / progress.total;
-          },
+          // progressCallback: (progress) => {
+          //   this.progress = (progress.loaded / progress.total) * 100;
+          // },
         });
+
+        this.step.fileUploading = false;
+        this.step.fileUploaded = true;
 
         this.updateImageUrl(key);
         this.identifyText(key);
@@ -146,6 +250,7 @@ export default {
       }
     },
     async identifyText(imageKey) {
+      this.step.textIdentifying = true;
       try {
         const result = await Predictions.identify({
           text: {
@@ -155,6 +260,8 @@ export default {
             },
           },
         });
+        this.step.textIdentifying = false;
+        this.step.textIdentified = true;
         this.searchValue = result.text.fullText;
         this.searchBooks();
       } catch (e) {
@@ -164,14 +271,23 @@ export default {
     },
     async searchBooks() {
       try {
+        this.step.bookSearching = true;
         const result = await API.get(
           "book_info_api",
           `/books/${encodeURIComponent(this.searchValue)}`
         );
-        this.searchResult = result.data.map((doc) => ({
-          id: doc._id,
-          ...doc._source,
-        }));
+        this.step.bookSearching = false;
+        this.step.bookSearched = true;
+        this.searchResult = result.data
+          .map((doc) => ({
+            id: doc._id,
+            ...doc._source,
+          }))
+          .reduce(function (map, obj) {
+            map[obj.id] = obj;
+            return map;
+          }, {});
+        console.log(typeof this.searchResult);
       } catch (e) {
         // TODO: 에러 처리
         console.error(e);
@@ -183,6 +299,8 @@ export default {
       this.author = book.authors;
     },
     async createFeed() {
+      this.step.feedCreating = true;
+
       const { book, comment, imageKey } = this;
       const identityId = this.identityId;
       const feed = { book, comment, imageKey, identityId };
@@ -197,6 +315,8 @@ export default {
       };
       const apiData = await API.post("feedapi", "/feed", myInit);
       console.log({ apiData });
+      this.step.feedCreating = false;
+      this.step.feedCreated = false;
       location.reload();
     },
   },

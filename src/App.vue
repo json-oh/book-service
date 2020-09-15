@@ -91,5 +91,22 @@ export default {
 
 #view {
   padding-top: 50px;
+  background-color: var(--vs-theme-bg) !important;
+}
+
+.page {
+  margin: 0 auto;
+  max-width: 900px;
+  min-height: 1200px;
+}
+
+:root {
+  --vs-primary: 26, 92, 255;
+  --vs-theme-bg: #f4f7f8;
+  --vs-theme-color: #2c3e50;
+  --vs-theme-layout: #fff;
+  --vs-theme-bg2: #eef2f5;
+  --vs-theme-code: #3f3d56;
+  --vs-theme-code2: #363449;
 }
 </style>
