@@ -1,23 +1,41 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-
     <login v-if="authState !== 'signedin'"></login>
     <template v-if="authState === 'signedin' && user">
-      <amplify-sign-out></amplify-sign-out>
-      <div id="nav">
-        <router-link to="/">전체 피드</router-link> |
-        <router-link to="/feed">내 피드</router-link> |
-        <router-link to="/create">피드 작성</router-link> |
-        <!--        <router-link to="/upload">Upload</router-link> |-->
-        <!--        <router-link to="/recommendation">추천</router-link>-->
+      <vs-navbar>
+        <template #left>
+          <router-link to="/" class="link">
+            <img id="logo" alt="Vue logo" src="./assets/logo.png" />
+          </router-link>
+        </template>
+        <vs-navbar-item :active="path === '/'" @click="$router.push('/')">
+          전체 피드
+        </vs-navbar-item>
+        <vs-navbar-item
+          :active="path === '/feed'"
+          @click="$router.push('/feed')"
+        >
+          내 피드
+        </vs-navbar-item>
+        <vs-navbar-item
+          :active="path === '/create'"
+          @click="$router.push('/create')"
+        >
+          피드 작성
+        </vs-navbar-item>
+        <template #right>
+          <vs-button flat @click="signOut">로그아웃</vs-button>
+        </template>
+      </vs-navbar>
+      <div id="view">
+        <router-view />
       </div>
-      <router-view />
     </template>
   </div>
 </template>
 
 <script>
+import { Auth } from "aws-amplify";
 import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 import Login from "./components/Login.vue";
 import { mapState } from "vuex";
@@ -32,7 +50,22 @@ export default {
       this.$store.commit("SET_USER", { authState, user });
     });
   },
-  computed: mapState(["authState", "user"]),
+  computed: {
+    ...mapState(["authState", "user"]),
+    path() {
+      return this.$route.path;
+    },
+  },
+  methods: {
+    async signOut() {
+      try {
+        await Auth.signOut();
+      } catch (error) {
+        // 에러 처리
+        console.error(error);
+      }
+    },
+  },
   beforeDestroy() {
     return onAuthUIStateChange;
   },
@@ -48,16 +81,15 @@ export default {
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
+#logo {
+  max-height: 20px;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.link {
+  line-height: 1;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+#view {
+  padding-top: 50px;
 }
 </style>
