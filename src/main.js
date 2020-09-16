@@ -7,7 +7,8 @@ import { AmazonAIPredictionsProvider } from "@aws-amplify/predictions";
 import aws_exports from "./aws-exports";
 import router from "./router";
 import store from "./store";
-import "vuesax/dist/vuesax.css"; //Vuesax styles
+import "vuesax/dist/vuesax.min.css"; //Vuesax styles
+import "boxicons/css/boxicons.min.css";
 
 Vue.use(Vuesax, {});
 
