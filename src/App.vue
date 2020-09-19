@@ -23,6 +23,12 @@
         >
           피드 작성
         </vs-navbar-item>
+        <vs-navbar-item
+          :active="path === '/users'"
+          @click="$router.push('/users')"
+        >
+          사용자 목록(임시)
+        </vs-navbar-item>
         <template #right>
           <vs-button flat @click="$router.push('/myinfo')">내정보</vs-button>
           <vs-button flat @click="signOut">로그아웃</vs-button>

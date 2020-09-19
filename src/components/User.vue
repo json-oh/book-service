@@ -6,7 +6,7 @@
         <vs-row>
           <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="3">
             <vs-avatar size="180">
-              <a href="#" @click="uploadProfileImage()">
+              <a href="javascript:void(0);" @click="uploadProfileImage()">
                 <img
                   v-if="this.profileImageUrl"
                   :src="this.profileImageUrl"
