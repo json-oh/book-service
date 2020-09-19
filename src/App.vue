@@ -35,10 +35,12 @@
 </template>
 
 <script>
-import { Auth } from "aws-amplify";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 import Login from "./components/Login.vue";
 import { mapState } from "vuex";
+import { getUser } from "./graphql/queries";
+import { createUser } from "./graphql/mutations";
 
 export default {
   name: "App",
@@ -48,6 +50,7 @@ export default {
   created() {
     onAuthUIStateChange((authState, user) => {
       this.$store.commit("SET_USER", { authState, user });
+      this.saveUserDB(user);
     });
   },
   computed: {
@@ -63,6 +66,22 @@ export default {
       } catch (error) {
         // 에러 처리
         console.error(error);
+      }
+    },
+    async saveUserDB(user) {
+      try {
+        const result = await API.graphql(
+          graphqlOperation(getUser, { id: user.attributes.sub })
+        );
+        const saved = result?.data?.getUser;
+        if (!saved) {
+          await API.graphql(
+            graphqlOperation(createUser, { input: { id: user.attributes.sub } })
+          );
+        }
+      } catch (e) {
+        // TODO: 에러 처리
+        console.error(e);
       }
     },
   },
