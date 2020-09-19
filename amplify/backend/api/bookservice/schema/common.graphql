@@ -1,0 +1,4 @@
+type ProtectedS3Object {
+  identityID: String!
+  key: String!
+}

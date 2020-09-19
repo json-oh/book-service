@@ -1,0 +1,12 @@
+type Like
+@model
+@key(fields: ["reviewID", "userID"])
+@auth(
+  rules: [
+    { allow: owner, ownerField: "userID", operations: [create, update, delete] }
+  ]
+) {
+  reviewID: ID!
+  userID: ID!
+  user: User! @connection(fields: ["userID"])
+}

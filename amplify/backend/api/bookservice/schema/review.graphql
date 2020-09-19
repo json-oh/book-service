@@ -1,0 +1,29 @@
+type Review
+@model
+@key(name: "byUser", fields: ["userID", "createdAt"])
+@auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
+  id: ID!
+  userID: ID!
+  user: User! @connection(fields: ["userID"])
+  book: Book!
+  image: ProtectedS3Object!
+  content: String!
+  likes: [Like!]! @connection(fields: ["id"])
+  comments: [Comment!]! @connection(keyName: "byReview", fields: ["id"])
+  createdAt: AWSDateTime!
+}
+
+type Book {
+  authors: String
+  categories: String
+  description: String
+  id: String
+  language: String
+  list_price: Int
+  page_count: Int
+  published_date: String
+  publisher: String
+  retail_price: Int
+  thumbnail_link: String
+  title: String
+}

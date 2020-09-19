@@ -1,0 +1,35 @@
+type User
+@model
+@auth(
+  rules: [
+    { allow: owner, ownerField: "id", operations: [create, update, delete] }
+  ]
+) {
+  id: ID!
+  nickname: String
+  profileImage: ProtectedS3Object
+  followers: [Friend!]! @connection(keyName: "byFollowing", fields: ["id"])
+  followings: [Friend!]! @connection(keyName: "byFollower", fields: ["id"])
+}
+
+type Friend
+@model
+@key(fields: ["followerID", "followingID"])
+@key(name: "byFollower", fields: ["followerID", "createdAt"])
+@key(name: "byFollowing", fields: ["followingID", "createdAt"])
+@auth(
+  rules: [
+    {
+      allow: owner
+      ownerField: "followerID"
+      operations: [create, update, delete]
+    }
+    { allow: owner, ownerField: "followingID", operations: [update, delete] }
+  ]
+) {
+  followerID: ID!
+  followingID: ID!
+  follower: User! @connection(fields: ["followerID"])
+  following: User! @connection(fields: ["followingID"])
+  createdAt: AWSDateTime!
+}

@@ -1,0 +1,15 @@
+type Comment
+@model
+@key(name: "byReview", fields: ["reviewID", "createdAt"])
+@auth(
+  rules: [
+    { allow: owner, ownerField: "userID", operations: [create, update, delete] }
+  ]
+) {
+  id: ID!
+  reviewID: ID!
+  userID: ID!
+  user: User! @connection(fields: ["userID"])
+  content: String!
+  createdAt: AWSDateTime!
+}
