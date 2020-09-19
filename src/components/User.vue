@@ -55,6 +55,7 @@ export default {
   },
   methods: {
     init() {
+      this.user = null;
       this.profileImageFile = null;
       this.profileImageUrl = null;
       this.getUser();
@@ -68,9 +69,9 @@ export default {
       const result = await API.graphql(
         graphqlOperation(getUser, { id: userinfo.username })
       );
-      const user = result.data.getUser;
+      const userResponse = result.data.getUser;
 
-      if (!user) {
+      if (!userResponse) {
         API.graphql(
           graphqlOperation(createUser, {
             input: {
@@ -82,14 +83,18 @@ export default {
         this.getUser();
         return;
       }
-      if (user.profileImage) {
-        this.profileImageUrl = await Storage.get(user.profileImage.key, {
-          level: "protected",
-          identityId: user.profileImage.identityID,
-        });
+
+      if (userResponse.profileImage) {
+        this.profileImageUrl = await Storage.get(
+          userResponse.profileImage.key,
+          {
+            level: "protected",
+            identityId: userResponse.profileImage.identityID,
+          }
+        );
       }
 
-      this.user = user;
+      this.user = userResponse;
     },
     async uploadProfileImage() {
       this.$refs.profileImage.click();
