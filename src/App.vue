@@ -24,6 +24,7 @@
           피드 작성
         </vs-navbar-item>
         <template #right>
+          <vs-button flat @click="$router.push('/myinfo')">내정보</vs-button>
           <vs-button flat @click="signOut">로그아웃</vs-button>
         </template>
       </vs-navbar>
@@ -108,5 +109,12 @@ export default {
   --vs-theme-bg2: #eef2f5;
   --vs-theme-code: #3f3d56;
   --vs-theme-code2: #363449;
+}
+.card .content {
+  padding: 50px;
+  border-radius: 20px 20px 20px 20px;
+  border-bottom: 0 solid rgba(0, 0, 0, 0.03);
+  background: var(--vs-theme-layout);
+  height: auto;
 }
 </style>

@@ -126,13 +126,6 @@
 .vs-input {
   width: 100%;
 }
-.card .content {
-  padding: 50px;
-  border-radius: 20px 20px 20px 20px;
-  border-bottom: 0 solid rgba(0, 0, 0, 0.03);
-  background: var(--vs-theme-layout);
-  height: auto;
-}
 .vs-radio-content {
   justify-content: start;
 }
