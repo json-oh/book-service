@@ -31,7 +31,7 @@
         </vs-navbar-item>
         <template #right>
           <vs-button flat @click="$router.push('/myinfo')">내정보</vs-button>
-          <vs-button flat @click="signOut">로그아웃</vs-button>
+          <vs-button flat danger @click="signOut">로그아웃</vs-button>
         </template>
       </vs-navbar>
       <div id="view">
