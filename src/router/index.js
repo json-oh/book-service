@@ -30,6 +30,16 @@ const routes = [
     name: "Recommendation",
     component: () => import("../views/Recommendation.vue"),
   },
+  {
+    path: "/myinfo",
+    name: "Myinfo",
+    component: () => import("../views/Myinfo.vue"),
+  },
+  {
+    path: "/users",
+    name: "Users",
+    component: () => import("../views/Users.vue"),
+  },
 ];
 
 const router = new VueRouter({
