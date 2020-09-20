@@ -1,7 +1,7 @@
 <template>
   <v-container fill-height>
     <v-row class="my-6" justify="center">
-      <v-col cols="12">
+      <v-col cols="2">
         <v-img src="../assets/logo.png"></v-img>
       </v-col>
     </v-row>

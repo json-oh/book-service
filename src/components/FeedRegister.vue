@@ -20,8 +20,9 @@
                 type="submit"
                 :disabled="!this.image"
                 style="display: inline-block"
-                >업로드</vs-button
               >
+                업로드
+              </vs-button>
             </div>
           </form>
         </div>
@@ -45,9 +46,9 @@
           <h3>아래의 제목 또는 저자를 찾았어요!</h3>
           <form v-if="searchValue !== null" @submit.prevent="searchBooks">
             <vs-input type="search" v-model.trim="searchValue" />
-            <vs-button flat type="submit" style="display: inline-block"
-              >다시 검색</vs-button
-            >
+            <vs-button flat type="submit" style="display: inline-block">
+              다시 검색
+            </vs-button>
           </form>
         </div>
 
@@ -109,16 +110,20 @@
                 />
               </vs-col>
             </vs-row>
-            <vs-button flat type="submit" style="display: inline-block"
-              >피드 등록</vs-button
-            >
+            <vs-button flat type="submit" style="display: inline-block">
+              피드 등록
+            </vs-button>
           </form>
         </div>
       </div>
     </div>
 
     <div v-if="error">
-      <p>업로드에 실패했습니다.<br />{{ error }}</p>
+      <p>
+        업로드에 실패했습니다.
+        <br />
+        {{ error }}
+      </p>
     </div>
   </div>
 </template>
@@ -166,7 +171,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["user", "authState"]),
+    ...mapState(["cognitoUser", "dbUser", "authState"]),
     isLoggedIn() {
       return this.authState === "signedin";
     },

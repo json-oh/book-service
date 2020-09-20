@@ -1,10 +1,10 @@
 <template>
   <v-container id="user">
     <h1>내 정보</h1>
-    <div v-if="user">
+    <div v-if="dbUser">
       <v-row>
         <v-col sm="4">
-          <v-avatar size="180">
+          <v-avatar size="180" color="grey lighten-2">
             <a href="javascript:void(0);" @click="uploadProfileImage()">
               <img
                 v-if="this.profileImageUrl"
@@ -25,7 +25,7 @@
         </v-col>
         <v-col sm="4">
           <v-text-field
-            v-model="user.nickname"
+            v-model="dbUser.nickname"
             label="닉네임"
             required
           ></v-text-field>
@@ -38,72 +38,58 @@
         </v-col>
       </v-row>
     </div>
+
+    <v-snackbar v-model="saved" timeout="4000">
+      저장되었습니다.
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
+<style>
+.v-avatar img,
+.v-avatar svg {
+  width: 180px;
+  height: 180px;
+}
+</style>
 <script>
 import { Auth, API, graphqlOperation, Storage } from "aws-amplify";
-import { getUser } from "../graphql/queries";
-import { createUser, updateUser } from "../graphql/mutations";
+import { updateUser } from "../graphql/mutations";
+import { mapState } from "vuex";
 
 export default {
   name: "User",
   data: function () {
     return {
-      user: null,
       profileImageFile: null,
       profileImageUrl: null,
+      saved: false,
     };
+  },
+  computed: {
+    ...mapState(["cognitoUser", "dbUser", "authState"]),
   },
   methods: {
     init() {
-      this.user = null;
       this.profileImageFile = null;
-      this.profileImageUrl = null;
-      this.getUser();
+      this.profileImageUrl = this.dbUser.profileImageUrl;
     },
     onFileChange(event) {
       this.profileImageFile = event.target.files[0];
       this.profileImageUrl = URL.createObjectURL(this.profileImageFile);
-    },
-    async getUser() {
-      const userinfo = await Auth.currentUserInfo();
-      const result = await API.graphql(
-        graphqlOperation(getUser, { id: userinfo.username })
-      );
-      const userResponse = result.data.getUser;
-
-      if (!userResponse) {
-        API.graphql(
-          graphqlOperation(createUser, {
-            input: {
-              id: userinfo.username,
-              nickname: userinfo.attributes.email,
-            },
-          })
-        );
-        this.getUser();
-        return;
-      }
-
-      if (userResponse.profileImage) {
-        this.profileImageUrl = await Storage.get(
-          userResponse.profileImage.key,
-          {
-            level: "protected",
-            identityId: userResponse.profileImage.identityID,
-          }
-        );
-      }
-
-      this.user = userResponse;
     },
     async uploadProfileImage() {
       this.$refs.profileImage.click();
     },
     async updateUser() {
       let userInput = {
-        id: this.user.id,
-        nickname: this.user.nickname,
+        id: this.dbUser.id,
+        nickname: this.dbUser.nickname,
       };
       if (this.profileImageFile) {
         const { key } = await Storage.put(
@@ -114,11 +100,11 @@ export default {
             contentType: this.profileImageFile.type,
           }
         );
-        this.user.profileImage = key;
+        this.dbUser.profileImage = key;
         const creds = await Auth.currentCredentials();
         userInput.profileImage = {
           identityID: creds.identityId,
-          key: this.user.profileImage,
+          key: this.dbUser.profileImage,
         };
       }
 
@@ -127,15 +113,12 @@ export default {
           input: userInput,
         })
       );
-      this.$vs.notification({
-        position: "top-center",
-        title: "저장하였습니다!",
-      });
+      this.saved = true;
       this.init();
     },
   },
-  async created() {
-    await this.getUser();
+  created() {
+    this.init();
   },
 };
 </script>

@@ -6,12 +6,14 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     authState: null,
-    user: null,
+    cognitoUser: null,
+    dbUser: null,
   },
   mutations: {
     SET_USER(state, payload) {
       state.authState = payload.authState;
-      state.user = payload.user;
+      state.cognitoUser = payload.cognitoUser;
+      state.dbUser = payload.dbUser;
     },
   },
   actions: {},

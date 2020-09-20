@@ -23,7 +23,7 @@
           </vs-button>
           <vs-button class="btn-chat" shadow primary>
             <i class="bx bx-chat"></i>
-            <span class="span"> 54 </span>
+            <span class="span">54</span>
           </vs-button>
         </template>
       </vs-card>
@@ -75,7 +75,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["user", "authState"]),
+    ...mapState(["cognitoUser", "dbUser", "authState"]),
     isLoggedIn() {
       return this.authState === "signedin";
     },

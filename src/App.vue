@@ -10,7 +10,7 @@
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <template v-if="authState === 'signedin' && user">
+        <template v-if="authState === 'signedin' && dbUser">
           <v-divider class="my-2"></v-divider>
           <v-list-item to="/myInfo">
             <v-list-item-icon>
@@ -37,14 +37,14 @@
       <v-toolbar-title>book-service</v-toolbar-title>
     </v-app-bar>
     <v-main>
-      <router-view v-if="authState === 'signedin' && user"></router-view>
+      <router-view v-if="authState === 'signedin' && dbUser"></router-view>
       <login v-else></login>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import { Auth, API, graphqlOperation } from "aws-amplify";
+import { Auth, API, graphqlOperation, Storage } from "aws-amplify";
 import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 import Login from "./components/Login.vue";
 import { mapState } from "vuex";
@@ -82,13 +82,13 @@ export default {
     ],
   }),
   created() {
-    onAuthUIStateChange((authState, user) => {
-      this.$store.commit("SET_USER", { authState, user });
-      this.saveUserDB(user);
+    onAuthUIStateChange(async (authState, cognitoUser) => {
+      const dbUser = await this.getUserDB(cognitoUser);
+      this.$store.commit("SET_USER", { authState, cognitoUser, dbUser });
     });
   },
   computed: {
-    ...mapState(["authState", "user"]),
+    ...mapState(["authState", "cognitoUser", "dbUser"]),
     path() {
       return this.$route.path;
     },
@@ -102,21 +102,36 @@ export default {
         console.error(error);
       }
     },
-    async saveUserDB(user) {
-      try {
-        const result = await API.graphql(
-          graphqlOperation(getUser, { id: user.attributes.sub })
+    async getUserDB(cognitoUser) {
+      if (!cognitoUser) return;
+      const result = await API.graphql(
+        graphqlOperation(getUser, { id: cognitoUser.username })
+      );
+      const userResponse = result.data.getUser;
+
+      if (!userResponse) {
+        API.graphql(
+          graphqlOperation(createUser, {
+            input: {
+              id: cognitoUser.username,
+              nickname: cognitoUser.attributes.email,
+            },
+          })
         );
-        const saved = result?.data?.getUser;
-        if (!saved) {
-          await API.graphql(
-            graphqlOperation(createUser, { input: { id: user.attributes.sub } })
-          );
-        }
-      } catch (e) {
-        // TODO: 에러 처리
-        console.error(e);
+        this.getUserDB(cognitoUser);
+        return;
       }
+
+      if (userResponse.profileImage) {
+        userResponse.profileImageUrl = await Storage.get(
+          userResponse.profileImage.key,
+          {
+            level: "protected",
+            identityId: userResponse.profileImage.identityID,
+          }
+        );
+      }
+      return userResponse;
     },
   },
   beforeDestroy() {
