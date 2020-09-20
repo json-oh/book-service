@@ -174,6 +174,7 @@ export const getReview = /* GraphQL */ `
         nextToken
       }
       createdAt
+      dummy
       updatedAt
     }
   }
@@ -220,6 +221,7 @@ export const listReviews = /* GraphQL */ `
           nextToken
         }
         createdAt
+        dummy
         updatedAt
       }
       nextToken
@@ -360,6 +362,124 @@ export const listFriends = /* GraphQL */ `
           updatedAt
         }
         createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getReviewsOrderByCreatedAt = /* GraphQL */ `
+  query GetReviewsOrderByCreatedAt(
+    $dummy: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelReviewFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getReviewsOrderByCreatedAt(
+      dummy: $dummy
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        user {
+          id
+          nickname
+          createdAt
+          updatedAt
+        }
+        book {
+          authors
+          categories
+          description
+          id
+          language
+          list_price
+          page_count
+          published_date
+          publisher
+          retail_price
+          thumbnail_link
+          title
+        }
+        image {
+          identityID
+          key
+        }
+        content
+        likes {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        createdAt
+        dummy
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getReviewsByUser = /* GraphQL */ `
+  query GetReviewsByUser(
+    $userID: ID
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelReviewFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getReviewsByUser(
+      userID: $userID
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        user {
+          id
+          nickname
+          createdAt
+          updatedAt
+        }
+        book {
+          authors
+          categories
+          description
+          id
+          language
+          list_price
+          page_count
+          published_date
+          publisher
+          retail_price
+          thumbnail_link
+          title
+        }
+        image {
+          identityID
+          key
+        }
+        content
+        likes {
+          nextToken
+        }
+        comments {
+          nextToken
+        }
+        createdAt
+        dummy
         updatedAt
       }
       nextToken

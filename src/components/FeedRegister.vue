@@ -294,6 +294,7 @@ export default {
               key: imageKey,
             },
             content: comment,
+            dummy: "dummy",
           },
         })
       );

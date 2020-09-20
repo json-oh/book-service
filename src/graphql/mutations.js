@@ -245,6 +245,7 @@ export const createReview = /* GraphQL */ `
         nextToken
       }
       createdAt
+      dummy
       updatedAt
     }
   }
@@ -313,6 +314,7 @@ export const updateReview = /* GraphQL */ `
         nextToken
       }
       createdAt
+      dummy
       updatedAt
     }
   }
@@ -381,6 +383,7 @@ export const deleteReview = /* GraphQL */ `
         nextToken
       }
       createdAt
+      dummy
       updatedAt
     }
   }

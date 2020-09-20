@@ -1,6 +1,15 @@
 type Review
 @model
-@key(name: "byUser", fields: ["userID", "createdAt"])
+@key(
+  name: "byDummy"
+  fields: ["dummy", "createdAt"]
+  queryField: "getReviewsOrderByCreatedAt"
+)
+@key(
+  name: "byUser"
+  fields: ["userID", "createdAt"]
+  queryField: "getReviewsByUser"
+)
 @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) {
   id: ID!
   userID: ID!
@@ -11,6 +20,7 @@ type Review
   likes: [Like!]! @connection(fields: ["id"])
   comments: [Comment!]! @connection(keyName: "byReview", fields: ["id"])
   createdAt: AWSDateTime!
+  dummy: String!
 }
 
 type Book {
