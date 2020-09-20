@@ -1,15 +1,21 @@
 <template>
-  <div>
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <amplify-authenticator username-alias="email">
-      <amplify-sign-up
-        slot="sign-up"
-        username-alias="email"
-        :form-fields.prop="formFields"
-      ></amplify-sign-up>
-      <amplify-sign-in slot="sign-in" username-alias="email"></amplify-sign-in>
-    </amplify-authenticator>
-  </div>
+  <v-container fill-height>
+    <v-row>
+      <v-col cols="12" align="center">
+        <amplify-authenticator username-alias="email">
+          <amplify-sign-up
+            slot="sign-up"
+            username-alias="email"
+            :form-fields.prop="formFields"
+          ></amplify-sign-up>
+          <amplify-sign-in
+            slot="sign-in"
+            username-alias="email"
+          ></amplify-sign-in>
+        </amplify-authenticator>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
