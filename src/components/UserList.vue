@@ -35,7 +35,7 @@
     </div>
   </v-container>
 </template>
-<style>
+<style scoped>
 .v-avatar img,
 .v-avatar svg {
   width: 40px;

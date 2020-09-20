@@ -48,9 +48,10 @@
         </v-btn>
       </template>
     </v-snackbar>
+    <v-overlay :value="overlay"></v-overlay>
   </v-container>
 </template>
-<style>
+<style scoped>
 .v-avatar img,
 .v-avatar svg {
   width: 180px;
@@ -66,6 +67,7 @@ export default {
   name: "User",
   data: function () {
     return {
+      overlay: false,
       profileImageFile: null,
       profileImageUrl: null,
       saved: false,
@@ -87,6 +89,7 @@ export default {
       this.$refs.profileImage.click();
     },
     async updateUser() {
+      this.overlay = true;
       let userInput = {
         id: this.dbUser.id,
         nickname: this.dbUser.nickname,
@@ -114,6 +117,7 @@ export default {
         })
       );
       this.saved = true;
+      this.overlay = false;
       this.init();
     },
   },
