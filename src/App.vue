@@ -85,6 +85,7 @@ export default {
     onAuthUIStateChange(async (authState, cognitoUser) => {
       const dbUser = await this.getUserDB(cognitoUser);
       this.$store.commit("SET_USER", { authState, cognitoUser, dbUser });
+      this.$store.dispatch("fetchIdentityId");
     });
   },
   computed: {
