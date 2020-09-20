@@ -1,9 +1,9 @@
 <template>
   <v-container fill-height>
     <v-row class="my-6" justify="center">
-      <v-cols cols="12">
+      <v-col cols="12">
         <v-img src="../assets/logo.png"></v-img>
-      </v-cols>
+      </v-col>
     </v-row>
     <v-row justify="center">
       <amplify-authenticator username-alias="email">

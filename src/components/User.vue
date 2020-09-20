@@ -1,43 +1,44 @@
 <template>
-  <div id="user" class="page">
-    <div class="card" v-if="user">
-      <div class="content">
-        <h3>내 정보</h3>
-        <vs-row>
-          <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="3">
-            <vs-avatar size="180">
-              <a href="javascript:void(0);" @click="uploadProfileImage()">
-                <img
-                  v-if="this.profileImageUrl"
-                  :src="this.profileImageUrl"
-                  alt=""
-                />
-                <img v-else src="../assets/user.png" alt="" />
-              </a>
-              <input
-                id="profileImage"
-                type="file"
-                ref="profileImage"
-                accept="image/png, image/jpeg"
-                @change="onFileChange"
-                v-show="false"
+  <v-container id="user">
+    <h1>내 정보</h1>
+    <div v-if="user">
+      <v-row>
+        <v-col sm="4">
+          <v-avatar size="180">
+            <a href="javascript:void(0);" @click="uploadProfileImage()">
+              <img
+                v-if="this.profileImageUrl"
+                :src="this.profileImageUrl"
+                alt=""
               />
-            </vs-avatar>
-          </vs-col>
-          <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="3">
-            <div class="center content-inputs">
-              <vs-input label="닉네임" v-model="user.nickname" />
-            </div>
-          </vs-col>
-        </vs-row>
-        <vs-row justify="flex-end">
-          <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="3">
-            <vs-button flat @click="updateUser()"> 저장 </vs-button>
-          </vs-col>
-        </vs-row>
-      </div>
+              <img v-else src="../assets/user.png" alt="" />
+            </a>
+            <input
+              id="profileImage"
+              type="file"
+              ref="profileImage"
+              accept="image/png, image/jpeg"
+              @change="onFileChange"
+              v-show="false"
+            />
+          </v-avatar>
+        </v-col>
+        <v-col sm="4">
+          <v-text-field
+            v-model="user.nickname"
+            label="닉네임"
+            required
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col sm="4"></v-col>
+        <v-col sm="4" class="d-flex justify-end">
+          <v-btn small color="primary" @click="updateUser()">저장</v-btn>
+        </v-col>
+      </v-row>
     </div>
-  </div>
+  </v-container>
 </template>
 <script>
 import { Auth, API, graphqlOperation, Storage } from "aws-amplify";
