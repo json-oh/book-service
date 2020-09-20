@@ -35,7 +35,7 @@
           </v-chip-group>
           <v-divider></v-divider>
           <v-subheader>댓글</v-subheader>
-          <v-list two-line>
+          <v-list class="overflow-y-auto" max-height="400" two-line>
             <v-list-item v-for="comment in comments" :key="comment.id">
               <v-list-item-avatar>
                 <v-img
@@ -57,14 +57,14 @@
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item>
-              <v-text-field
-                v-model="commentText"
-                append-icon="mdi-send"
-                @click:append="addComment"
-              ></v-text-field>
-            </v-list-item>
           </v-list>
+          <v-list-item>
+            <v-text-field
+              v-model="commentText"
+              append-icon="mdi-send"
+              @click:append="addComment"
+            ></v-text-field>
+          </v-list-item>
         </v-sheet>
       </v-bottom-sheet>
     </v-card-actions>
