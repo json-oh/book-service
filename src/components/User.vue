@@ -116,6 +116,7 @@ export default {
           input: userInput,
         })
       );
+      this.dbUser.profileImageUrl = this.profileImageUrl;
       this.saved = true;
       this.overlay = false;
       this.init();
