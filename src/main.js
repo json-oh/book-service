@@ -9,6 +9,7 @@ import router from "./router";
 import store from "./store";
 import "vuesax/dist/vuesax.min.css"; //Vuesax styles
 import "boxicons/css/boxicons.min.css";
+import vuetify from './plugins/vuetify';
 
 Vue.use(Vuesax, {});
 
@@ -42,5 +43,6 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
-  render: (h) => h(App),
+  vuetify,
+  render: (h) => h(App)
 }).$mount("#app");
