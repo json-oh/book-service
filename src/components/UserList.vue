@@ -43,7 +43,7 @@
 }
 </style>
 <script>
-import { API, graphqlOperation, Storage } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import { listUsers } from "../graphql/queries";
 import { createFriend, deleteFriend } from "../graphql/mutations";
 import { mapState } from "vuex";
