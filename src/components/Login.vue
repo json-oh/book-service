@@ -1,19 +1,22 @@
 <template>
   <v-container fill-height>
-    <v-row>
-      <v-col cols="12" align="center">
-        <amplify-authenticator username-alias="email">
-          <amplify-sign-up
-            slot="sign-up"
-            username-alias="email"
-            :form-fields.prop="formFields"
-          ></amplify-sign-up>
-          <amplify-sign-in
-            slot="sign-in"
-            username-alias="email"
-          ></amplify-sign-in>
-        </amplify-authenticator>
-      </v-col>
+    <v-row class="my-6" justify="center">
+      <v-cols cols="12">
+        <v-img src="../assets/logo.png"></v-img>
+      </v-cols>
+    </v-row>
+    <v-row justify="center">
+      <amplify-authenticator username-alias="email">
+        <amplify-sign-up
+          slot="sign-up"
+          username-alias="email"
+          :form-fields.prop="formFields"
+        ></amplify-sign-up>
+        <amplify-sign-in
+          slot="sign-in"
+          username-alias="email"
+        ></amplify-sign-in>
+      </amplify-authenticator>
     </v-row>
   </v-container>
 </template>
