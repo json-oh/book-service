@@ -34,7 +34,7 @@
       <v-row>
         <v-col sm="4"></v-col>
         <v-col sm="4" class="d-flex justify-end">
-          <v-btn small color="primary" @click="updateUser()">저장</v-btn>
+          <v-btn color="primary" @click="updateUser()">저장</v-btn>
         </v-col>
       </v-row>
     </div>

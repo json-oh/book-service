@@ -1,160 +1,143 @@
 <template>
-  <div id="feedRegister" v-if="isLoggedIn" class="page">
-    <div class="card">
-      <div class="content">
-        <progress :value="progress" style="width: 300px"></progress>
+  <v-container id="feedRegister">
+    <h1>리뷰 등록</h1>
+    <v-stepper v-model="stepper" vertical>
+      <v-stepper-step :complete="step.fileUploaded" step="1">
+        책 표지 등록
+        <small>책 표지 사진을 업로드합니다.</small>
+      </v-stepper-step>
 
-        <div v-if="step.fileSelecting">
-          <h3>책 표지를 업로드해주세요.</h3>
-          <form @submit.prevent="upload">
-            <div class="center content-inputs">
-              <input
-                type="file"
-                id="image"
-                name="image"
-                accept="image/png, image/jpeg"
-                @change="onFileChange"
-              />
-              <vs-button
-                flat
-                type="submit"
-                :disabled="!this.image"
-                style="display: inline-block"
-              >
-                업로드
-              </vs-button>
-            </div>
-          </form>
-        </div>
-
+      <v-stepper-content step="1">
         <div v-if="step.fileUploading">
-          <h3>책 표지를 업로드하는 중입니다.</h3>
-        </div>
+          <v-file-input
+            label="표지 선택"
+            filled
+            prepend-icon="mdi-camera"
+            id="image"
+            name="image"
+            accept="image/png, image/jpeg"
+            @change="onFileChange"
+          ></v-file-input>
 
+          <v-btn color="primary" @click="upload()">업로드</v-btn>
+        </div>
         <div v-if="step.fileUploaded">
           <div v-if="uploadedImageUrl">
-            <h3>업로드가 완료되었습니다.</h3>
-            <img width="250px" alt="업로드된 이미지" :src="uploadedImageUrl" />
+            <v-img
+              width="250px"
+              alt="업로드된 이미지"
+              :src="uploadedImageUrl"
+            />
           </div>
         </div>
+      </v-stepper-content>
 
+      <v-stepper-step :complete="step.textIdentified" step="2">
+        제목 및 저자 입력
+      </v-stepper-step>
+
+      <v-stepper-content step="2">
         <div v-if="step.textIdentifying">
-          <h3>책 표지에서 정보를 찾고 있어요.</h3>
+          <small>책 표지에서 자동으로 정보를 찾고 있습니다!</small>
         </div>
 
         <div v-if="step.textIdentified">
-          <h3>아래의 제목 또는 저자를 찾았어요!</h3>
+          <h3></h3>
           <form v-if="searchValue !== null" @submit.prevent="searchBooks">
-            <vs-input type="search" v-model.trim="searchValue" />
-            <vs-button flat type="submit" style="display: inline-block">
-              다시 검색
-            </vs-button>
+            <v-text-field
+              v-model.trim="searchValue"
+              label="아래의 정보를 찾았어요!"
+              required
+            ></v-text-field>
+
+            <v-btn type="submit" color="primary">다시 검색</v-btn>
           </form>
         </div>
+      </v-stepper-content>
 
+      <v-stepper-step :complete="step.bookSearched" step="3">
+        책 선택
+      </v-stepper-step>
+
+      <v-stepper-content step="2">
         <div v-if="step.bookSearching">
-          <h3>일치하는 책을 찾고 있어요.</h3>
+          <small>일치하는 책을 찾고 있어요.</small>
         </div>
 
         <div v-if="step.bookSearched">
-          <h3>일치하는 책을 선택해주세요!</h3>
-          <div v-if="searchResult">
-            <span v-for="book in searchResult" :key="book.id">
-              <vs-radio v-model="selectedBook" :val="book.id">
-                {{ book.title }} - {{ book.authors }}
-              </vs-radio>
-            </span>
-          </div>
+          <small>일치하는 책을 선택해주세요!</small>
+          <v-radio-group>
+            <v-radio
+              v-for="book in searchResult"
+              :key="book.id"
+              :label="`${book.title} - ${book.authors}`"
+              :value="book.id"
+              @click="select(book)"
+            ></v-radio>
+          </v-radio-group>
         </div>
+      </v-stepper-content>
 
-        <div v-if="step.bookSearched">
-          <h3>피드를 작성해주세요!</h3>
-          <form @submit.prevent="createFeed" id="feedForm">
-            <vs-row justify="space-around" direction="column" class="mh">
-              <vs-col>
-                <vs-input
-                  id="title"
-                  name="title"
-                  label="제목"
-                  type="text"
-                  v-model="title"
-                  placeholder="Title"
-                  disabled="disabled"
-                />
-              </vs-col>
-            </vs-row>
-            <br />
-            <vs-row justify="space-around" direction="column" class="mh">
-              <vs-col>
-                <vs-input
-                  id="author"
-                  name="author"
-                  label="저자"
-                  type="text"
-                  v-model="author"
-                  placeholder="Author"
-                  disabled="disabled"
-                />
-              </vs-col>
-            </vs-row>
-            <br />
-            <vs-row justify="space-around" direction="column" class="mh">
-              <vs-col>
-                <vs-input
-                  id="comment"
-                  label="한줄평"
-                  name="comment"
-                  type="text"
-                  v-model="comment"
-                  placeholder="Comment"
-                />
-              </vs-col>
-            </vs-row>
-            <vs-button flat type="submit" style="display: inline-block">
-              피드 등록
-            </vs-button>
+      <v-stepper-step :complete="step.reviewCreated" step="4">
+        리뷰 작성
+      </v-stepper-step>
+
+      <v-stepper-content step="2">
+        <div v-if="step.reviewCreating">
+          <small>리뷰를 작성해주세요.</small>
+          <form @submit.prevent="createReview" id="feedForm">
+            <v-text-field
+              v-model="title"
+              label="제목"
+              disabled="disabled"
+            ></v-text-field>
+            <v-text-field
+              v-model="author"
+              label="저자"
+              disabled="disabled"
+            ></v-text-field>
+            <v-text-field
+              v-model="comment"
+              label="한줄 평"
+              placeholder="한줄 평"
+            ></v-text-field>
+
+            <v-btn type="submit" color="primary">리뷰 등록</v-btn>
           </form>
         </div>
-      </div>
-    </div>
-
-    <div v-if="error">
-      <p>
-        업로드에 실패했습니다.
-        <br />
-        {{ error }}
-      </p>
-    </div>
-  </div>
+        <div v-if="step.reviewCreated">
+          <small>리뷰가 등록되었습니다. :)</small>
+        </div>
+      </v-stepper-content>
+    </v-stepper>
+    <v-overlay :value="overlay"></v-overlay>
+  </v-container>
 </template>
 <style>
-.vs-input {
-  width: 100%;
-}
-.vs-radio-content {
-  justify-content: start;
+.v-stepper__wrapper {
+  height: auto !important;
 }
 </style>
 <script>
-import { API, Auth, Storage } from "aws-amplify";
+import { API, Auth, graphqlOperation, Storage } from "aws-amplify";
 import Predictions from "@aws-amplify/predictions";
 import { mapState } from "vuex";
+import { createReview } from "../graphql/mutations";
 
 export default {
   name: "FeedRegister",
   data() {
     return {
+      overlay: false,
       step: {
-        fileSelecting: true,
-        fileSelected: false,
-        fileUploading: false,
+        fileUploading: true,
         fileUploaded: false,
         textIdentifying: false,
         textIdentified: false,
         bookSearching: false,
         bookSearched: false,
-        feedCreating: false,
-        feedCreated: false,
+        reviewCreating: false,
+        reviewCreated: false,
       },
       image: null,
       imageKey: "",
@@ -175,16 +158,18 @@ export default {
     isLoggedIn() {
       return this.authState === "signedin";
     },
-    progress() {
-      return (
-        (1 +
-          this.step.fileSelected +
-          this.step.fileUploaded +
-          this.step.textIdentified +
-          this.step.bookSearched +
-          this.step.feedCreated) /
-        6
-      );
+    stepper() {
+      if (this.step.fileUploading) {
+        return 1;
+      } else if (this.step.textIdentifying) {
+        return 2;
+      } else if (this.step.bookSearching) {
+        return 3;
+      } else if (this.step.reviewCreating) {
+        return 4;
+      } else {
+        return 0;
+      }
     },
   },
   watch: {
@@ -193,8 +178,8 @@ export default {
     },
   },
   methods: {
-    onFileChange(event) {
-      this.image = event.target.files[0];
+    onFileChange(file) {
+      this.image = file;
     },
     resetResult() {
       // this.progress = 0;
@@ -205,10 +190,8 @@ export default {
       if (!this.image) {
         return;
       }
-      this.step.fileSelecting = false;
-      this.step.fileSelected = true;
-      this.step.fileUploading = true;
       this.resetResult();
+      this.overlay = true;
 
       try {
         // put object
@@ -222,6 +205,7 @@ export default {
 
         this.step.fileUploading = false;
         this.step.fileUploaded = true;
+        this.overlay = false;
 
         this.updateImageUrl(key);
         this.identifyText(key);
@@ -295,26 +279,26 @@ export default {
       this.book = book;
       this.title = book.title;
       this.author = book.authors;
+      this.step.reviewCreating = true;
     },
-    async createFeed() {
-      this.step.feedCreating = true;
-
+    async createReview() {
       const { book, comment, imageKey } = this;
       const identityId = this.identityId;
-      const feed = { book, comment, imageKey, identityId };
-      console.log(feed);
-      const myInit = {
-        headers: {
-          Authorization: (await Auth.currentSession())
-            .getIdToken()
-            .getJwtToken(),
-        },
-        body: feed,
-      };
-      const apiData = await API.post("feedapi", "/feed", myInit);
-      console.log({ apiData });
-      this.step.feedCreating = false;
-      this.step.feedCreated = false;
+      await API.graphql(
+        graphqlOperation(createReview, {
+          input: {
+            userID: this.dbUser.id,
+            book: book,
+            image: {
+              identityID: identityId,
+              key: imageKey,
+            },
+            content: comment,
+          },
+        })
+      );
+      this.step.reviewCreating = false;
+      this.step.reviewCreated = true;
       location.reload();
     },
   },
