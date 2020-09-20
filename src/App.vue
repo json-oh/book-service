@@ -44,12 +44,13 @@
 </template>
 
 <script>
-import { Auth, API, graphqlOperation, Storage } from "aws-amplify";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 import Login from "./components/Login.vue";
 import { mapState } from "vuex";
 import { getUser } from "./graphql/queries";
 import { createUser } from "./graphql/mutations";
+import { getImageUrl } from "./utils/imageUtil";
 
 export default {
   name: "App",
@@ -124,12 +125,9 @@ export default {
       }
 
       if (userResponse.profileImage) {
-        userResponse.profileImageUrl = await Storage.get(
+        userResponse.profileImageUrl = await getImageUrl(
           userResponse.profileImage.key,
-          {
-            level: "protected",
-            identityId: userResponse.profileImage.identityID,
-          }
+          userResponse.profileImage.identityID
         );
       }
       return userResponse;

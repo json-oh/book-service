@@ -123,6 +123,7 @@ import { API, Auth, graphqlOperation, Storage } from "aws-amplify";
 import Predictions from "@aws-amplify/predictions";
 import { mapState } from "vuex";
 import { createReview } from "../graphql/mutations";
+import { getImageUrl } from "../utils/imageUtil";
 
 export default {
   name: "FeedRegister",
@@ -222,10 +223,7 @@ export default {
       const creds = await Auth.currentCredentials();
       this.identityId = creds.identityId;
       try {
-        this.uploadedImageUrl = await Storage.get(imageKey, {
-          level: "protected",
-          identityId: this.identityId,
-        });
+        this.uploadedImageUrl = await getImageUrl(imageKey, this.identityId);
       } catch (e) {
         // TODO: 에러 처리
         console.error(e);

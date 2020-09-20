@@ -47,6 +47,7 @@ import { API, graphqlOperation, Storage } from "aws-amplify";
 import { listUsers } from "../graphql/queries";
 import { createFriend, deleteFriend } from "../graphql/mutations";
 import { mapState } from "vuex";
+import { getImageUrl } from "../utils/imageUtil";
 
 export default {
   name: "UserList",
@@ -72,10 +73,10 @@ export default {
       for (const user of userResponse) {
         if (user.profileImage) {
           console.log(user.profileImage);
-          const profileImageUrl = await Storage.get(user.profileImage.key, {
-            level: "protected",
-            identityId: user.profileImage.identityID,
-          });
+          const profileImageUrl = await getImageUrl(
+            user.profileImage.key,
+            user.profileImage.identityID
+          );
           console.log(profileImageUrl);
           user.profileImageUrl = profileImageUrl;
         }
