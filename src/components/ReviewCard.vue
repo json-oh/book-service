@@ -60,9 +60,11 @@
           </v-list>
           <v-list-item>
             <v-text-field
+              class="pl-14"
               v-model="commentText"
               append-icon="mdi-send"
               @click:append="addComment"
+              placeholder="댓글을 남겨주세요."
             ></v-text-field>
           </v-list-item>
         </v-sheet>
@@ -151,7 +153,7 @@ export default {
             nickname: item.user.nickname,
             profileImage:
               profileImage &&
-              (await getImageUrl(profileImage.key, profileImage.identityId)),
+              (await getImageUrl(profileImage.key, profileImage.identityID)),
             content: item.content,
           };
         });
