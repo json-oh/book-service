@@ -18,9 +18,21 @@ export const createComment = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -49,9 +61,21 @@ export const updateComment = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -80,9 +104,21 @@ export const deleteComment = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -110,9 +146,21 @@ export const createLike = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -139,9 +187,21 @@ export const updateLike = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -168,9 +228,21 @@ export const deleteLike = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -197,9 +269,21 @@ export const createReview = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -228,6 +312,12 @@ export const createReview = /* GraphQL */ `
         items {
           reviewID
           userID
+          user {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -238,6 +328,12 @@ export const createReview = /* GraphQL */ `
           id
           reviewID
           userID
+          user {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           content
           createdAt
           updatedAt
@@ -266,9 +362,21 @@ export const updateReview = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -297,6 +405,12 @@ export const updateReview = /* GraphQL */ `
         items {
           reviewID
           userID
+          user {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -307,6 +421,12 @@ export const updateReview = /* GraphQL */ `
           id
           reviewID
           userID
+          user {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           content
           createdAt
           updatedAt
@@ -335,9 +455,21 @@ export const deleteReview = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -366,6 +498,12 @@ export const deleteReview = /* GraphQL */ `
         items {
           reviewID
           userID
+          user {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -376,6 +514,12 @@ export const deleteReview = /* GraphQL */ `
           id
           reviewID
           userID
+          user {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           content
           createdAt
           updatedAt
@@ -404,6 +548,18 @@ export const createUser = /* GraphQL */ `
         items {
           followerID
           followingID
+          follower {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
+          following {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -413,6 +569,18 @@ export const createUser = /* GraphQL */ `
         items {
           followerID
           followingID
+          follower {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
+          following {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -439,6 +607,18 @@ export const updateUser = /* GraphQL */ `
         items {
           followerID
           followingID
+          follower {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
+          following {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -448,6 +628,18 @@ export const updateUser = /* GraphQL */ `
         items {
           followerID
           followingID
+          follower {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
+          following {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -474,6 +666,18 @@ export const deleteUser = /* GraphQL */ `
         items {
           followerID
           followingID
+          follower {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
+          following {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -483,6 +687,18 @@ export const deleteUser = /* GraphQL */ `
         items {
           followerID
           followingID
+          follower {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
+          following {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -509,9 +725,21 @@ export const createFriend = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -525,9 +753,21 @@ export const createFriend = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -554,9 +794,21 @@ export const updateFriend = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -570,9 +822,21 @@ export const updateFriend = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -599,9 +863,21 @@ export const deleteFriend = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -615,9 +891,21 @@ export const deleteFriend = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt

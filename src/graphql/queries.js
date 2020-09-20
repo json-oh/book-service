@@ -15,9 +15,21 @@ export const getComment = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -43,6 +55,16 @@ export const listComments = /* GraphQL */ `
         user {
           id
           nickname
+          profileImage {
+            identityID
+            key
+          }
+          followers {
+            nextToken
+          }
+          followings {
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -67,9 +89,21 @@ export const getLike = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -103,6 +137,16 @@ export const listLikes = /* GraphQL */ `
         user {
           id
           nickname
+          profileImage {
+            identityID
+            key
+          }
+          followers {
+            nextToken
+          }
+          followings {
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -126,9 +170,21 @@ export const getReview = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -157,6 +213,12 @@ export const getReview = /* GraphQL */ `
         items {
           reviewID
           userID
+          user {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -167,6 +229,12 @@ export const getReview = /* GraphQL */ `
           id
           reviewID
           userID
+          user {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           content
           createdAt
           updatedAt
@@ -192,6 +260,16 @@ export const listReviews = /* GraphQL */ `
         user {
           id
           nickname
+          profileImage {
+            identityID
+            key
+          }
+          followers {
+            nextToken
+          }
+          followings {
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -215,9 +293,23 @@ export const listReviews = /* GraphQL */ `
         }
         content
         likes {
+          items {
+            reviewID
+            userID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         comments {
+          items {
+            id
+            reviewID
+            userID
+            content
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -241,6 +333,18 @@ export const getUser = /* GraphQL */ `
         items {
           followerID
           followingID
+          follower {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
+          following {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -250,6 +354,18 @@ export const getUser = /* GraphQL */ `
         items {
           followerID
           followingID
+          follower {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
+          following {
+            id
+            nickname
+            createdAt
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -275,9 +391,21 @@ export const listUsers = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -300,9 +428,21 @@ export const getFriend = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -316,9 +456,21 @@ export const getFriend = /* GraphQL */ `
           key
         }
         followers {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         followings {
+          items {
+            followerID
+            followingID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -352,12 +504,32 @@ export const listFriends = /* GraphQL */ `
         follower {
           id
           nickname
+          profileImage {
+            identityID
+            key
+          }
+          followers {
+            nextToken
+          }
+          followings {
+            nextToken
+          }
           createdAt
           updatedAt
         }
         following {
           id
           nickname
+          profileImage {
+            identityID
+            key
+          }
+          followers {
+            nextToken
+          }
+          followings {
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -391,6 +563,16 @@ export const getReviewsOrderByCreatedAt = /* GraphQL */ `
         user {
           id
           nickname
+          profileImage {
+            identityID
+            key
+          }
+          followers {
+            nextToken
+          }
+          followings {
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -414,9 +596,23 @@ export const getReviewsOrderByCreatedAt = /* GraphQL */ `
         }
         content
         likes {
+          items {
+            reviewID
+            userID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         comments {
+          items {
+            id
+            reviewID
+            userID
+            content
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
@@ -450,6 +646,16 @@ export const getReviewsByUser = /* GraphQL */ `
         user {
           id
           nickname
+          profileImage {
+            identityID
+            key
+          }
+          followers {
+            nextToken
+          }
+          followings {
+            nextToken
+          }
           createdAt
           updatedAt
         }
@@ -473,9 +679,23 @@ export const getReviewsByUser = /* GraphQL */ `
         }
         content
         likes {
+          items {
+            reviewID
+            userID
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         comments {
+          items {
+            id
+            reviewID
+            userID
+            content
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         createdAt
