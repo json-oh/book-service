@@ -1,13 +1,16 @@
 <template>
-  <v-row justify="center">
+  <v-row justify="center" v-if="user">
     <v-dialog v-model="show" scrollable max-width="1000px">
-      <v-card >
-        <h1>사용자</h1>
+      <v-card>
+        <h1 class="pl-10 pt-5">
+          {{ user.nickname
+          }}<v-icon @click="toggleFollow(user)"> {{ followStar }} </v-icon>
+        </h1>
 
         <user-feed v-if="show" :user="user"></user-feed>
         <v-divider></v-divider>
         <v-card-actions>
-          <v-btn color="blue darken-1" text @click="close()">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="close()">닫기</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -16,6 +19,9 @@
 
 <script>
 import UserFeed from "./UserFeeds";
+import { API, graphqlOperation } from "aws-amplify";
+import { createFriend, deleteFriend } from "../graphql/mutations";
+import { mapState } from "vuex";
 
 export default {
   name: "ModalUserFeeds",
@@ -24,7 +30,13 @@ export default {
     dialog: Boolean,
     user: Object,
   },
+  data: function () {
+    return {
+      follow: false,
+    };
+  },
   computed: {
+    ...mapState(["dbUser"]),
     show: {
       get: function () {
         return this.dialog;
@@ -33,11 +45,42 @@ export default {
         this.close();
       },
     },
+    followStar() {
+      return this.follow ? "mdi-star" : "mdi-star-outline";
+    },
   },
   methods: {
     close() {
       this.$emit("closeModalFeeds");
     },
+    toggleFollow(targetUser) {
+      if (this.follow) {
+        this.follow = false;
+        API.graphql(
+          graphqlOperation(deleteFriend, {
+            input: {
+              followerID: this.dbUser.id,
+              followingID: targetUser.id,
+            },
+          })
+        );
+      } else {
+        this.follow = true;
+        API.graphql(
+          graphqlOperation(createFriend, {
+            input: {
+              followerID: this.dbUser.id,
+              followingID: targetUser.id,
+            },
+          })
+        );
+      }
+    },
+  },
+  created() {
+    this.follow = this.dbUser.followings.items.some(
+      (x) => x.followingID === this.user.id
+    );
   },
 };
 </script>

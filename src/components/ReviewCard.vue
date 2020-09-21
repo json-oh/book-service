@@ -12,15 +12,23 @@
     <v-card-text>{{ review.content }}</v-card-text>
     <v-card-actions>
       <v-list-item class="ps-1 pe-0">
-        <v-list-item-avatar class="me-3" v-if="profileImageUrl">
+        <v-list-item-avatar
+          class="me-3"
+          v-if="profileImageUrl"
+          @click="showModalFeeds(review.user)"
+          style="cursor: pointer"
+        >
           <v-img :src="profileImageUrl"></v-img>
         </v-list-item-avatar>
         <v-list-item-content
           @click="showModalFeeds(review.user)"
           style="cursor: pointer"
         >
-          <v-list-item-title>{{ review.user.nickname }}</v-list-item-title>
+          <v-list-item-title class="font-weight-bold">{{
+            review.user.nickname
+          }}</v-list-item-title>
         </v-list-item-content>
+
         <v-spacer></v-spacer>
         <v-btn
           icon

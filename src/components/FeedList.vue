@@ -18,6 +18,7 @@
       </v-btn>
     </v-row>
     <modal-user-feeds
+      v-if="modalUser"
       :dialog="showModal"
       :user="modalUser"
       @closeModalFeeds="closeModalFeeds"
