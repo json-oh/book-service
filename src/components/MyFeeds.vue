@@ -1,90 +1,65 @@
 <template>
-  <div id="feedList" v-if="isLoggedIn">
-    <h2>내 피드 목록</h2>
-    <vs-card-group>
-      <vs-card v-for="(feed, index) in feeds" :key="index">
-        <template #title>
-          <h3>{{ feed.book.title }}</h3>
-        </template>
-        <template #img>
-          <img
-            :src="feed.imageUrl"
-            alt="feed.imageKey"
-            height="250px"
-            style="width: auto"
-          />
-        </template>
-        <template #text>
-          <p>{{ feed.comment }}</p>
-        </template>
-        <template #interactions>
-          <vs-button danger icon>
-            <i class="bx bx-heart"></i>
-          </vs-button>
-          <vs-button class="btn-chat" shadow primary>
-            <i class="bx bx-chat"></i>
-            <span class="span">54</span>
-          </vs-button>
-        </template>
-      </vs-card>
-    </vs-card-group>
-  </div>
+  <v-container>
+    <v-row>
+      <template v-if="reviews.length > 0">
+        <v-col v-for="review in reviews" :key="review.id" cols="4">
+          <review-card :initial-review="review"></review-card>
+        </v-col>
+      </template>
+      <template v-else>
+        <v-col v-for="n in 3" :key="n" cols="4">
+          <v-skeleton-loader type="card"></v-skeleton-loader>
+        </v-col>
+      </template>
+    </v-row>
+    <v-row justify="center">
+      <v-btn v-if="reviewNextToken" @click="getReviews(reviewNextToken)">
+        더 보기
+      </v-btn>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import { API, Auth, Storage } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
+import { getReviewsByUser } from "../graphql/queries_custom";
+import ReviewCard from "./ReviewCard.vue";
 import { mapState } from "vuex";
 
 export default {
   name: "MyFeeds",
+  components: { ReviewCard },
   data() {
     return {
-      identityId: undefined,
-      feeds: [],
+      reviews: [],
+      reviewLimit: 10,
+      reviewNextToken: null,
     };
   },
+  created() {
+    this.getReviews(null);
+  },
+  computed: {
+    ...mapState(["dbUser"]),
+  },
   methods: {
-    init() {
-      this.feeds = [];
-    },
-    async getMyFeeds() {
-      const creds = await Auth.currentCredentials();
-      this.identityId = creds.identityId;
-      const myInit = {
-        headers: {
-          Authorization: (await Auth.currentSession())
-            .getIdToken()
-            .getJwtToken(),
-        },
-      };
-      const feedData = await API.get("feedapi", "/feed", myInit);
-      this.feeds = feedData;
-      this.getImageUrl();
-    },
-    async getImageUrl() {
+    async getReviews(nextToken) {
       try {
-        for (let i = 0; i < this.feeds.length; i++) {
-          let feed = this.feeds[i];
-          feed.imageUrl = await Storage.get(feed.imageKey, {
-            level: "protected",
-            identityId: this.identityId,
-          });
-          this.feeds.splice(i, 1, feed);
-        }
+        const { data } = await API.graphql(
+          graphqlOperation(getReviewsByUser, {
+            userID: this.dbUser.id,
+            limit: this.reviewLimit,
+            sortDirection: "DESC",
+            nextToken,
+          })
+        );
+        this.reviews = [...this.reviews, ...data.getReviewsByUser.items];
+        this.reviewNextToken = data.getReviewsByUser.nextToken;
       } catch (e) {
         // TODO: 에러 처리
         console.error(e);
       }
     },
-  },
-  computed: {
-    ...mapState(["cognitoUser", "dbUser", "authState"]),
-    isLoggedIn() {
-      return this.authState === "signedin";
-    },
-  },
-  created() {
-    this.getMyFeeds();
   },
 };
 </script>
