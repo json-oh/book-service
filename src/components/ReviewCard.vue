@@ -11,64 +11,72 @@
     <v-card-subtitle>{{ review.book.authors }}</v-card-subtitle>
     <v-card-text>{{ review.content }}</v-card-text>
     <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn
-        icon
-        :color="like ? 'pink' : undefined"
-        @click="like ? removeLike() : addLike()"
-      >
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-      <v-bottom-sheet v-model="openDetail" inset>
-        <template #activator="{ on, attrs }">
-          <v-btn icon v-bind="attrs" v-on="on">
-            <v-icon>mdi-message-reply-text</v-icon>
-          </v-btn>
-        </template>
-        <v-sheet>
-          <v-subheader>좋아하는 사람</v-subheader>
-          <v-chip-group class="mx-3">
-            <v-chip v-for="like in likes" :key="like.id">
-              {{ like.nickname || like.userID }}
-            </v-chip>
-            <v-chip v-if="review.likes.nextToken">...</v-chip>
-          </v-chip-group>
-          <v-divider></v-divider>
-          <v-subheader>댓글</v-subheader>
-          <v-list class="overflow-y-auto" max-height="400" two-line>
-            <v-list-item v-for="comment in comments" :key="comment.id">
-              <v-list-item-avatar>
-                <v-img
-                  v-if="comment.profileImage"
-                  :src="comment.profileImage"
-                ></v-img>
-                <v-skeleton-loader
-                  v-else
-                  boilerplate
-                  type="avatar"
-                ></v-skeleton-loader>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-subtitle>
-                  {{ comment.nickname || comment.userID }}
-                </v-list-item-subtitle>
-                <v-list-item-title>
-                  {{ comment.content }}
-                </v-list-item-title>
-              </v-list-item-content>
+      <v-list-item class="ps-1 pe-0">
+        <v-list-item-avatar class="me-3" v-if="profileImageUrl">
+          <v-img :src="profileImageUrl"></v-img>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>{{ review.user.nickname }}</v-list-item-title>
+        </v-list-item-content>
+        <v-spacer></v-spacer>
+        <v-btn
+          icon
+          :color="like ? 'pink' : undefined"
+          @click="like ? removeLike() : addLike()"
+        >
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
+        <v-bottom-sheet v-model="openDetail" inset>
+          <template #activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on">
+              <v-icon>mdi-message-reply-text</v-icon>
+            </v-btn>
+          </template>
+          <v-sheet>
+            <v-subheader>좋아하는 사람</v-subheader>
+            <v-chip-group class="mx-3">
+              <v-chip v-for="like in likes" :key="like.id">
+                {{ like.nickname || like.userID }}
+              </v-chip>
+              <v-chip v-if="review.likes.nextToken">...</v-chip>
+            </v-chip-group>
+            <v-divider></v-divider>
+            <v-subheader>댓글</v-subheader>
+            <v-list class="overflow-y-auto" max-height="400" two-line>
+              <v-list-item v-for="comment in comments" :key="comment.id">
+                <v-list-item-avatar>
+                  <v-img
+                    v-if="comment.profileImage"
+                    :src="comment.profileImage"
+                  ></v-img>
+                  <v-skeleton-loader
+                    v-else
+                    boilerplate
+                    type="avatar"
+                  ></v-skeleton-loader>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-subtitle>
+                    {{ comment.nickname || comment.userID }}
+                  </v-list-item-subtitle>
+                  <v-list-item-title>
+                    {{ comment.content }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-list-item>
+              <v-text-field
+                class="pl-14"
+                v-model="commentText"
+                append-icon="mdi-send"
+                @click:append="addComment"
+                placeholder="댓글을 남겨주세요."
+              ></v-text-field>
             </v-list-item>
-          </v-list>
-          <v-list-item>
-            <v-text-field
-              class="pl-14"
-              v-model="commentText"
-              append-icon="mdi-send"
-              @click:append="addComment"
-              placeholder="댓글을 남겨주세요."
-            ></v-text-field>
-          </v-list-item>
-        </v-sheet>
-      </v-bottom-sheet>
+          </v-sheet>
+        </v-bottom-sheet>
+      </v-list-item>
     </v-card-actions>
   </v-card>
 </template>
@@ -97,10 +105,12 @@ export default {
       commentsNextToken: null,
       review: { ...this.initialReview },
       imageUrl: null,
+      profileImageUrl: null,
     };
   },
   created() {
     this.getImageUrl();
+    this.getProfileImageUrl();
     this.getLike();
     this.mapLikes(this.review.likes);
     this.mapComments(this.review.comments);
@@ -108,6 +118,7 @@ export default {
   watch: {
     review(newReview) {
       this.getImageUrl();
+      this.getProfileImageUrl();
       this.getLike();
       this.mapLikes(newReview.likes);
       this.mapComments(newReview.comments);
@@ -122,6 +133,15 @@ export default {
         this.review.image.key,
         this.review.image.identityID
       );
+    },
+    async getProfileImageUrl() {
+      const { profileImage } = this.review.user;
+      if (profileImage) {
+        this.profileImageUrl = await getImageUrl(
+          profileImage.key,
+          profileImage.identityID
+        );
+      }
     },
     async getReview() {
       const { data } = await API.graphql(
