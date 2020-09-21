@@ -17,28 +17,23 @@
         더 보기
       </v-btn>
     </v-row>
-    <modal-user-feeds
-      :dialog="showModal"
-      :user="modalUser"
-      @closeModalFeeds="closeModalFeeds"
-    ></modal-user-feeds>
   </v-container>
 </template>
 
 <script>
 import { API, graphqlOperation } from "aws-amplify";
-import { getReviewsOrderByCreatedAt } from "../graphql/queries_custom";
+import { getReviewsByUser } from "../graphql/queries_custom";
 import ReviewCard from "./ReviewCard.vue";
-import ModalUserFeeds from "./ModalUserFeeds";
 import { mapState } from "vuex";
 
 export default {
-  name: "all-review-list",
-  components: { ModalUserFeeds, ReviewCard },
+  name: "UserFeed",
+  props: {
+    user: Object,
+  },
+  components: { ReviewCard },
   data() {
     return {
-      showModal: false,
-      modalUser: null,
       reviews: [],
       reviewLimit: 10,
       reviewNextToken: null,
@@ -47,38 +42,27 @@ export default {
   created() {
     this.getReviews(null);
   },
+  computed: {
+    ...mapState(["dbUser"]),
+  },
   methods: {
-    closeModalFeeds() {
-      this.modalUser = null;
-      this.showModal = false;
-    },
-    showModalFeeds(user) {
-      this.modalUser = user;
-      this.showModal = true;
-    },
     async getReviews(nextToken) {
       try {
         const { data } = await API.graphql(
-          graphqlOperation(getReviewsOrderByCreatedAt, {
-            dummy: "dummy",
+          graphqlOperation(getReviewsByUser, {
+            userID: this.user.id,
             limit: this.reviewLimit,
             sortDirection: "DESC",
             nextToken,
           })
         );
-        this.reviews = [
-          ...this.reviews,
-          ...data.getReviewsOrderByCreatedAt.items,
-        ];
-        this.reviewNextToken = data.getReviewsOrderByCreatedAt.nextToken;
+        this.reviews = [...this.reviews, ...data.getReviewsByUser.items];
+        this.reviewNextToken = data.getReviewsByUser.nextToken;
       } catch (e) {
         // TODO: 에러 처리
         console.error(e);
       }
     },
-  },
-  computed: {
-    ...mapState(["dbUser"]),
   },
 };
 </script>

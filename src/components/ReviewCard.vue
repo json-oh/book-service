@@ -15,7 +15,10 @@
         <v-list-item-avatar class="me-3" v-if="profileImageUrl">
           <v-img :src="profileImageUrl"></v-img>
         </v-list-item-avatar>
-        <v-list-item-content>
+        <v-list-item-content
+          @click="showModalFeeds(review.user)"
+          style="cursor: pointer"
+        >
           <v-list-item-title>{{ review.user.nickname }}</v-list-item-title>
         </v-list-item-content>
         <v-spacer></v-spacer>
@@ -128,6 +131,9 @@ export default {
     ...mapState(["cognitoUser"]),
   },
   methods: {
+    showModalFeeds(user) {
+      this.$parent.showModalFeeds(user);
+    },
     async getImageUrl() {
       this.imageUrl = await getImageUrl(
         this.review.image.key,

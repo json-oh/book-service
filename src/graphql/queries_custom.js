@@ -180,9 +180,10 @@ export const getReviewsByUser = /* GraphQL */ `
         likes {
           items {
             reviewID
-            userID
-            createdAt
-            updatedAt
+            user {
+              id
+              nickname
+            }
           }
           nextToken
         }
@@ -190,7 +191,14 @@ export const getReviewsByUser = /* GraphQL */ `
           items {
             id
             reviewID
-            userID
+            user {
+              id
+              nickname
+              profileImage {
+                identityID
+                key
+              }
+            }
             content
             createdAt
             updatedAt
