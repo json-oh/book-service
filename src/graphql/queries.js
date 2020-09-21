@@ -336,12 +336,20 @@ export const getUser = /* GraphQL */ `
           follower {
             id
             nickname
+            profileImage {
+              identityID
+              key
+            }
             createdAt
             updatedAt
           }
           following {
             id
             nickname
+            profileImage {
+              identityID
+              key
+            }
             createdAt
             updatedAt
           }
@@ -357,12 +365,20 @@ export const getUser = /* GraphQL */ `
           follower {
             id
             nickname
+            profileImage {
+              identityID
+              key
+            }
             createdAt
             updatedAt
           }
           following {
             id
             nickname
+            profileImage {
+              identityID
+              key
+            }
             createdAt
             updatedAt
           }
