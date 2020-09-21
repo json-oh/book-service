@@ -1,41 +1,29 @@
 <template>
-  <div id="recommend">
-    <h2>추천 목록</h2>
-    <vs-card-group>
-      <vs-card v-for="(book, index) in books" :key="index">
-        <template #title>
-          <h3>{{ book.title }}</h3>
-        </template>
-        <template #img>
-          <img
-            :src="book.thumbnail_link"
-            alt="book.title"
-            height="250px"
-            style="width: auto"
-          />
-        </template>
-        <template #text>
-          <p>{{ book.authors }}</p>
-        </template>
-        <template #interactions>
-          <vs-button danger icon>
-            <i class="bx bx-heart"></i>
-          </vs-button>
-          <vs-button class="btn-chat" shadow primary>
-            <i class="bx bx-chat"></i>
-            <span class="span"> 54 </span>
-          </vs-button>
-        </template>
-      </vs-card>
-    </vs-card-group>
-  </div>
+  <v-container>
+    <v-row>
+      <template v-if="books">
+        <v-col v-for="book in books" :key="book.id" cols="4">
+          <recommend-card :book="book"></recommend-card>
+        </v-col>
+      </template>
+      <template v-else>
+        <v-col v-for="n in 3" :key="n" cols="4">
+          <v-skeleton-loader type="card"></v-skeleton-loader>
+        </v-col>
+      </template>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import { API, Auth } from "aws-amplify";
+import RecommendCard from "./RecommendCard";
 
 export default {
   name: "Recommend",
+  components: {
+    RecommendCard,
+  },
   data() {
     return {
       books: null,
