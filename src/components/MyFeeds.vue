@@ -7,7 +7,7 @@
         sm="2"
         class="pa-n16"
       >
-        <v-list-item>
+        <v-list-item @click="showModalFeeds(user)" style="cursor: pointer">
           <v-list-item-avatar>
             <v-img
               v-if="user.profileImageUrl"
@@ -32,6 +32,13 @@
         <v-icon>mdi-pencil</v-icon> 새 리뷰 쓰기</v-btn
       >
     </v-row>
+
+    <modal-user-feeds
+      v-if="modalUser"
+      :dialog="showModal"
+      :user="modalUser"
+      @closeModalFeeds="closeModalFeeds"
+    ></modal-user-feeds>
   </div>
 </template>
 
@@ -39,19 +46,30 @@
 import { mapState } from "vuex";
 import UserFeed from "./UserFeeds";
 import { getImageUrl } from "../utils/imageUtil";
+import ModalUserFeeds from "./ModalUserFeeds";
 
 export default {
   name: "MyFeeds",
-  components: { UserFeed },
+  components: { UserFeed, ModalUserFeeds },
   data: function () {
     return {
       followings: [],
+      showModal: false,
+      modalUser: null,
     };
   },
   computed: {
     ...mapState(["dbUser"]),
   },
   methods: {
+    closeModalFeeds() {
+      this.modalUser = null;
+      this.showModal = false;
+    },
+    showModalFeeds(user) {
+      this.modalUser = user;
+      this.showModal = true;
+    },
     async getProfileImageUrl(user) {
       const { profileImage } = user;
       if (profileImage) {
