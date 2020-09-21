@@ -12,7 +12,7 @@
               dot
               offset-x="10"
               offset-y="10"
-              :color="user.follow ? 'blue lighten-5' : 'blue accent-4'"
+              :color="user.follow ? 'blue accent-4' : 'blue lighten-5'"
               sm-6
             >
               <v-avatar>
@@ -72,12 +72,10 @@ export default {
       const userResponse = result.data.listUsers.items;
       for (const user of userResponse) {
         if (user.profileImage) {
-          console.log(user.profileImage);
           const profileImageUrl = await getImageUrl(
             user.profileImage.key,
             user.profileImage.identityID
           );
-          console.log(profileImageUrl);
           user.profileImageUrl = profileImageUrl;
         }
 
@@ -110,6 +108,7 @@ export default {
     },
   },
   async created() {
+    this.init();
     await this.getUsers();
   },
 };
