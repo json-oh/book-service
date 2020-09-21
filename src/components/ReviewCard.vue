@@ -14,13 +14,14 @@
       <v-list-item class="ps-1 pe-0">
         <v-list-item-avatar
           class="me-3"
-          v-if="profileImageUrl"
+          v-if="showUserInfo && profileImageUrl"
           @click="showModalFeeds(review.user)"
           style="cursor: pointer"
         >
           <v-img :src="profileImageUrl"></v-img>
         </v-list-item-avatar>
         <v-list-item-content
+          v-if="showUserInfo"
           @click="showModalFeeds(review.user)"
           style="cursor: pointer"
         >
@@ -104,6 +105,10 @@ export default {
   name: "review-card",
   props: {
     initialReview: Object,
+    showUserInfo: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {

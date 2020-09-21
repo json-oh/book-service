@@ -3,7 +3,10 @@
     <v-row>
       <template v-if="reviews.length > 0">
         <v-col v-for="review in reviews" :key="review.id" cols="4">
-          <review-card :initial-review="review"></review-card>
+          <review-card
+            :initial-review="review"
+            :show-user-info="showUserInfo"
+          ></review-card>
         </v-col>
       </template>
       <template v-else>
@@ -30,6 +33,10 @@ export default {
   name: "UserFeed",
   props: {
     user: Object,
+    showUserInfo: {
+      type: Boolean,
+      default: true,
+    },
   },
   components: { ReviewCard },
   data() {

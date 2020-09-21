@@ -25,7 +25,7 @@
       </v-col>
     </v-row>
     <v-divider></v-divider>
-    <user-feed :user="dbUser"></user-feed>
+    <user-feed :user="dbUser" v-bind:show-user-info="false"></user-feed>
 
     <v-row justify="center">
       <v-btn @click="$router.push('create')">

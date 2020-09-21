@@ -7,7 +7,11 @@
           }}<v-icon @click="toggleFollow(user)"> {{ followStar }} </v-icon>
         </h1>
 
-        <user-feed v-if="show" :user="user"></user-feed>
+        <user-feed
+          v-if="show"
+          :user="user"
+          v-bind:show-user-info="false"
+        ></user-feed>
         <v-divider></v-divider>
         <v-card-actions>
           <v-btn color="blue darken-1" text @click="close()">닫기</v-btn>
