@@ -141,7 +141,6 @@ export const getReviewsByUser = /* GraphQL */ `
     ) {
       items {
         id
-        userID
         user {
           id
           nickname
@@ -149,27 +148,9 @@ export const getReviewsByUser = /* GraphQL */ `
             identityID
             key
           }
-          followers {
-            nextToken
-          }
-          followings {
-            nextToken
-          }
-          createdAt
-          updatedAt
         }
         book {
           authors
-          categories
-          description
-          id
-          language
-          list_price
-          page_count
-          published_date
-          publisher
-          retail_price
-          thumbnail_link
           title
         }
         image {
@@ -190,7 +171,6 @@ export const getReviewsByUser = /* GraphQL */ `
         comments {
           items {
             id
-            reviewID
             user {
               id
               nickname
@@ -206,7 +186,6 @@ export const getReviewsByUser = /* GraphQL */ `
           nextToken
         }
         createdAt
-        dummy
         updatedAt
       }
       nextToken
