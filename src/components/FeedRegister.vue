@@ -147,7 +147,6 @@ export default {
       searchValue: null,
       searchResult: null,
       identityId: null,
-      selectedBook: null,
       title: "",
       author: "",
       book: null,
@@ -173,17 +172,11 @@ export default {
       }
     },
   },
-  watch: {
-    selectedBook: function (val) {
-      this.select(this.searchResult[val]);
-    },
-  },
   methods: {
     onFileChange(file) {
       this.image = file;
     },
     resetResult() {
-      // this.progress = 0;
       this.uploadedImageUrl = "";
       this.error = "";
     },
@@ -199,9 +192,6 @@ export default {
         const { key } = await Storage.put(this.image.name, this.image, {
           level: "protected",
           contentType: this.image.type,
-          // progressCallback: (progress) => {
-          //   this.progress = (progress.loaded / progress.total) * 100;
-          // },
         });
 
         this.step.fileUploading = false;
@@ -252,22 +242,18 @@ export default {
     async searchBooks() {
       try {
         this.step.bookSearching = true;
+        this.step.bookSearched = false;
+        this.searchResult = null;
         const result = await API.get(
           "book_info_api",
           `/books/${encodeURIComponent(this.searchValue)}`
         );
         this.step.bookSearching = false;
         this.step.bookSearched = true;
-        this.searchResult = result.data
-          .map((doc) => ({
-            id: doc._id,
-            ...doc._source,
-          }))
-          .reduce(function (map, obj) {
-            map[obj.id] = obj;
-            return map;
-          }, {});
-        console.log(typeof this.searchResult);
+        this.searchResult = result.data.map((doc) => ({
+          id: doc._id,
+          ...doc._source,
+        }));
       } catch (e) {
         // TODO: 에러 처리
         console.error(e);
