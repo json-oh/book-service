@@ -80,11 +80,6 @@ export default {
         title: "추천 목록",
         to: "/recommendation",
       },
-      {
-        icon: "mdi-account-supervisor",
-        title: "사용자 목록(임시)",
-        to: "/users",
-      },
     ],
   }),
   created() {
