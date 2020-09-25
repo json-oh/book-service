@@ -47,6 +47,8 @@ import { mapState } from "vuex";
 import UserFeed from "./UserFeeds";
 import { getImageUrl } from "../utils/imageUtil";
 import ModalUserFeeds from "./ModalUserFeeds";
+import { API, graphqlOperation } from "aws-amplify";
+import { getUser } from "../graphql/queries";
 
 export default {
   name: "MyFeeds",
@@ -80,7 +82,11 @@ export default {
     },
   },
   async created() {
-    const promises = await this.dbUser.followings.items.map(async (friend) => {
+    const result = await API.graphql(
+      graphqlOperation(getUser, { id: this.dbUser.id })
+    );
+    const user = result.data.getUser;
+    const promises = await user.followings.items.map(async (friend) => {
       const user = friend.following;
       user.profileImageUrl = await this.getProfileImageUrl(user);
       return user;
