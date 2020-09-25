@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <template v-if="reviews.length > 0">
+      <template v-if="reviews !== null">
         <v-col v-for="review in reviews" :key="review.id" cols="12" sm="4">
           <review-card
             :initial-review="review"
@@ -41,7 +41,7 @@ export default {
   components: { ReviewCard },
   data() {
     return {
-      reviews: [],
+      reviews: null,
       reviewLimit: 10,
       reviewNextToken: null,
     };
@@ -63,7 +63,11 @@ export default {
             nextToken,
           })
         );
-        this.reviews = [...this.reviews, ...data.getReviewsByUser.items];
+        if (this.reviews) {
+          this.reviews = [...this.reviews, ...data.getReviewsByUser.items];
+        } else {
+          this.reviews = [...data.getReviewsByUser.items];
+        }
         this.reviewNextToken = data.getReviewsByUser.nextToken;
       } catch (e) {
         // TODO: 에러 처리
