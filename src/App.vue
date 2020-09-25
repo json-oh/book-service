@@ -83,10 +83,19 @@ export default {
     ],
   }),
   created() {
-    onAuthUIStateChange(async (authState, cognitoUser) => {
-      const dbUser = await this.getUserDB(cognitoUser);
-      this.$store.commit("SET_USER", { authState, cognitoUser, dbUser });
-      this.$store.dispatch("fetchIdentityId");
+    onAuthUIStateChange((authState, cognitoUser) => {
+      this.$store.commit("SET_COGNITO_USER", { authState, cognitoUser });
+      if (authState === "signedin" && cognitoUser) {
+        this.getIdentityId().then((identityId) =>
+          this.$store.commit("SET_IDENTITY_ID", identityId)
+        );
+        this.getOrCreateDBUser(cognitoUser).then((dbUser) =>
+          this.$store.commit("SET_DB_USER", dbUser)
+        );
+      } else {
+        this.$store.commit("SET_IDENTITY_ID", null);
+        this.$store.commit("SET_DB_USER", null);
+      }
     });
   },
   computed: {
@@ -104,15 +113,18 @@ export default {
         console.error(error);
       }
     },
-    async getUserDB(cognitoUser) {
-      if (!cognitoUser) return;
-      const result = await API.graphql(
-        graphqlOperation(getUser, { id: cognitoUser.username })
-      );
-      const userResponse = result.data.getUser;
-
-      if (!userResponse) {
-        API.graphql(
+    async getIdentityId() {
+      try {
+        const { identityId } = await Auth.currentCredentials();
+        return identityId;
+      } catch (e) {
+        return null;
+      }
+    },
+    async getOrCreateDBUser(cognitoUser) {
+      let dbUser;
+      try {
+        const result = await API.graphql(
           graphqlOperation(createUser, {
             input: {
               id: cognitoUser.username,
@@ -120,17 +132,22 @@ export default {
             },
           })
         );
-        this.getUserDB(cognitoUser);
-        return;
+        dbUser = result.data.createUser;
+      } catch (e) {
+        const result = await API.graphql(
+          graphqlOperation(getUser, { id: cognitoUser.username })
+        );
+        dbUser = result.data.getUser;
       }
 
-      if (userResponse.profileImage) {
-        userResponse.profileImageUrl = await getImageUrl(
-          userResponse.profileImage.key,
-          userResponse.profileImage.identityID
+      if (dbUser.profileImage) {
+        dbUser.profileImageUrl = await getImageUrl(
+          dbUser.profileImage.key,
+          dbUser.profileImage.identityID
         );
       }
-      return userResponse;
+
+      return dbUser;
     },
   },
   beforeDestroy() {
