@@ -2,12 +2,12 @@
   <v-container>
     <v-row>
       <template v-if="books">
-        <v-col v-for="book in books" :key="book.id" cols="4">
+        <v-col v-for="book in books" :key="book.id" cols="12" sm="4">
           <recommend-card :book="book"></recommend-card>
         </v-col>
       </template>
       <template v-else>
-        <v-col v-for="n in 3" :key="n" cols="4">
+        <v-col v-for="n in 3" :key="n" cols="12" sm="4">
           <v-skeleton-loader type="card"></v-skeleton-loader>
         </v-col>
       </template>

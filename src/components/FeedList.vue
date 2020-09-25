@@ -2,12 +2,12 @@
   <v-container>
     <v-row>
       <template v-if="reviews.length > 0">
-        <v-col v-for="review in reviews" :key="review.id" cols="4">
+        <v-col v-for="review in reviews" :key="review.id" cols="12" sm="4">
           <review-card :initial-review="review"></review-card>
         </v-col>
       </template>
       <template v-else>
-        <v-col v-for="n in 3" :key="n" cols="4">
+        <v-col v-for="n in 3" :key="n" cols="12" sm="4">
           <v-skeleton-loader type="card"></v-skeleton-loader>
         </v-col>
       </template>
