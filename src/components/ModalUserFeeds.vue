@@ -2,16 +2,18 @@
   <v-row justify="center" v-if="user">
     <v-dialog v-model="show" scrollable max-width="1000px">
       <v-card>
-        <h1 class="pl-10 pt-5">
-          {{ user.nickname
-          }}<v-icon @click="toggleFollow(user)"> {{ followStar }} </v-icon>
-        </h1>
-
-        <user-feed
-          v-if="show"
-          :user="user"
-          v-bind:show-user-info="false"
-        ></user-feed>
+        <v-card-title>
+          <span>{{ user.nickname }}</span>
+          <v-spacer></v-spacer>
+          <v-icon @click="toggleFollow(user)">{{ followStar }}</v-icon>
+        </v-card-title>
+        <v-card-text>
+          <user-feed
+            v-if="show"
+            :user="user"
+            v-bind:show-user-info="false"
+          ></user-feed>
+        </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
           <v-btn color="blue darken-1" text @click="close()">닫기</v-btn>
